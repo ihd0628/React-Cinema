@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    <span>Total Click: 0</span>
-    <button id="btn">Click me</button>    
+    <div id="root"></div>
 </body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
 <script>
-    let counter = 0;
-    const button = document.getElementById("btn");
-    function handleClick(event) {
-        counter = counter + 1
-    }
-    button.addEventListener("click", handleClick)
+    const root = document.getElementById("root");
+    const h3 = React.createElement("h3", null, "Hello im a span");
+    const btn = React.createElement("button", null, "Click me");
+    const container = React.createElement("div", null, [h3, btn])
+    ReactDOM.render(container, root);
 </script>
 </html>
