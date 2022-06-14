@@ -331,7 +331,7 @@ React JS 가 그걸 HTMl 로 번역한다는 점이다.
     const btn = React.createElement("button", null, "Click me");
     const container = React.createElement("div", null, [h3, btn])
     ReactDOM.render(container, root);
-</script>
+</script> 
 </html>
 *************************************************************************************************************************************
 
