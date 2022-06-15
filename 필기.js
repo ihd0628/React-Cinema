@@ -335,4 +335,452 @@ React JS 가 그걸 HTMl 로 번역한다는 점이다.
 </html>
 *************************************************************************************************************************************
 
+현재까지 2개의 component를 가지는 component를 생성한거다. 
 
+하지만 내가 하고자 하는것의 본질은 태그를 만들기만 하는것이 아니라 
+태그를 만들고 그것을 가져온 뒤 addEventListener 를 붙이고 
+그 다음에 lisener function을 붙이는 것이다. 
+
+하지만 우린 위의 내용을 다 해주는 대신에, React JS를 통해서 button 에 property 를 줄 수 있다. 
+그리고 그 propery에 eventListener 를 주는것이다. 
+property에는 id, style 뿐 아니라 eventListener도 줄 수 있다. 
+
+이것이 React의 POWER 다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root = document.getElementById("root");
+    const h3 = React.createElement("h3", null, "Hello im a span");    
+    const btn = React.createElement(
+        "button", 
+        {
+            onClick: () => console.log("Im clicked"),                       <- property로 eventListener 를 주었다. 
+        }, 
+        "Click me"
+    );
+    const container = React.createElement("div", null, [h3, btn])
+    ReactDOM.render(container, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+즉, 아래의 Vanila Javascript 4줄을 아래의 React 코드가 대체한것이다. 
+근디 event 이름이 Javascript 에서는 "click" 인데 React JS 에서는 "onClick" 이다.
+React 에서는 앞에 on을 붙여줌으로서 eventListener 를 생성하는것을 알려줄 수 있다. 
+
+그래서 eventListener는 브라우저의 태그에서 안보이는거고 
+id를 property 로 추가하면 브라우저에서도 태그의 id를 볼 수 있는것이다. 
+on으로 eventListener 인지 아닌지 구분 할 수 있으니까. 
+
+*************************************************************************************************************************************
+(React JS)
+const btn = React.createElement(
+    "button", 
+    {
+        onClick: () => console.log("Im clicked"),
+    }, 
+    "Click me"
+);
+
+
+(Vanila Javascript)
+<button id="btn">Click me</button>    
+
+const button = document.getElementById("btn");
+const span = document.querySelector("span");
+button.addEventListener("click", handleClick)
+*************************************************************************************************************************************
+
+아래처럼 h3에도 eventListener를 추가해줄 수 있다. 
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root = document.getElementById("root");
+    const h3 = React.createElement(
+        "h3", 
+        {
+            onMouseEnter: () => console.log("Mouse Enter"),
+        }, 
+        "Hello im a span"
+    );    
+    const btn = React.createElement(
+        "button", 
+        {
+            onClick: () => console.log("Im clicked"),
+        }, 
+        "Click me"
+    );
+    const container = React.createElement("div", null, [h3, btn])
+    ReactDOM.render(container, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 우리는 하나의 statement만으로 이렇게 많이 해냈다. 
+이것이 바로 React JS의 POWER다. 
+
+React JS 는 바로 interactivity를 위하여 제작된것이다. 
+
+React JS 팀은 알고 있는것이다. 
+interactivie 한 어플리케이션에서 하는 작업들 모두가 event들을 감지하는 일이란 것을 말이다. 
+addEventListener를 반복하는것 대신에 property에선 event를 등록할 수 있게 된 것이다. 
+
+하지만 초반에 말했듯이 이것은 복잡한 방식이다. 
+조금 더 쉬운 방식을 다음번에 알아볼 것이다. 
+
+
+
+# JSX 
+
+createElement를 대체할 수 있는 방법에 대해 다뤄볼 것이다. 
+굳이 대체하려는 이유는 개발자들에게 좀 더 편리한 도구를 사용하기 위해서다. 
+
+그리고 그 편리한 녀석이 바로 "JSX" 이다. 
+JSX는 Javascript를 확장한 문법이다. 
+
+생긴게 HTML이랑 비슷해서, JSX로 React 요소를 만드는 게 개발자들 입장에서 굉장히 편리하나든 장점이 있다. 
+
+자 아래의 코드는 동일한 기능을 하는 코드이다. (이름은 h3에서 Title로 바뀜)
+별도로 설명이 필요하지 않을만큰 간단한 문법이다. 
+개발자들이 createElement()를 사용하지 않는 이유는 여러가지 것들을 기억해가면서 진행해야 하기 때문이다. 
+하지만 JSX는 봤을 때 훨씬 이해하기가 쉽다. 
+심지어 HTML과 같은 규칙을 사용하고 말이다. 
+(태그 열고 닫고, 내용은 사이 담고, props는 첫 태그 사이에 넣고..)
+*************************************************************************************************************************************
+(복잡한 React 방식)
+const h3 = React.createElement(
+    "h3", 
+    {
+        onMouseEnter: () => console.log("Mouse Enter"),
+    }, 
+    "Hello im a span"
+);
+
+(JSX 사용 쉽다는 방식)
+const Title = (
+    <h3 
+    id="title" 
+    onMouseEnter={()=>{
+        console.log("mouse entered")
+    }}
+    >
+        Hello Im a title
+    </h3>
+);
+*************************************************************************************************************************************
+
+자 그렇다면 button 까지 JSX 형식으로 작성한 코드는 아래와 같다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root = document.getElementById("root");
+    const Title = (
+        <h3 
+        id="title" 
+        onMouseEnter={()=>{
+            console.log("mouse entered")
+        }}
+        >
+            Hello Im a title
+        </h3>
+    );
+    const Button = (
+        <button
+            style={{
+                backgroundColor: "tomato",
+            }}
+            onClick={()=>{
+                console.log("Im Clicked!!");
+            }}
+        >
+            Click Me!
+        
+        </button>
+    );
+    const btn = React.createElement(
+        "button", 
+        {
+            onClick: () => console.log("Im clicked"),
+        }, 
+        "Click me"
+    );
+    const container = React.createElement("div", null, [Title, Button])
+    ReactDOM.render(container, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+하지만 이렇게 사용하면 에러가 뜬다. 
+왜냐면 아직 브라우저는 JSX의 문법을 모르기때문 늘 그래왔듯이 뭔가 해줘야겠지. 
+
+이걸 이해시키기 위해 우리는 Babel을 사용할 것이다. 
+Babel은 코드를 변환해주는 역할을 하는데 내가 JSX로 적은 코드를 브라우저가 이해할 수 있는 형태로 바꿔주는 것이다. 
+
+일단 변환기를 설치해야 하고 
+Babel standalone을 이용해서 다운받을 거다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>            <- 여기서 babel import 해주고 
+<script type="text/babel">                                                          <- 여기서 내가작성한 React 코드의 type을 지정해준다. 
+   .
+   .
+</script>
+</html>
+*************************************************************************************************************************************
+
+위처럼 babel을 적용해주니 브라우저가 에러띄우지 않고 잘 동작한다. 
+다만 이 방법은 이번 강의를 진행하기 위한 방법이며 효율적이지 않은 느린속도의 방법이라고 한다. 
+ 
+
+자 이번엔 
+
+const container = React.createElement("div", null, [Title, Button])
+
+이 부분도 JSX 방법을 이용하여 대체해 볼 것이다. 
+
+*************************************************************************************************************************************
+const Container = (
+    <div>Title Button</div>
+);
+*************************************************************************************************************************************
+
+그렇다고 이렇게 적어주면 될까?
+당연히 안되지 그냥 브라우저에는 "Title Button" 이라는 텍스트만 나올 뿐이다. 
+
+내가 만들어준 Title 과 Button을 포함시키기 위해서 
+첫번째로 해야할것은 Title 과 Button 을 함수화 시켜주는것이다. 
+
+기존 함수 구조를 쓴다면 내가 만든 JSX 를 무조건 return 해줘야한다. 아래의 모양처럼 
+function Title(){
+    return (
+        내가만든 JSX
+    )
+}
+
+하지만 arrow function은 함수내부의 평가결과를 return 해주는 성질이 있으므로 굳이 return 쓸것없다. 
+->arrow function쓰는데 중활호로 묶어주면 return 해야함. 소괄호 일때만 retrun 안해도 됨. 
+즉, 아래처럼 해줘도 됨. 
+
+Title = () => (
+    내가만든 JSX
+);
+
+두번째로는 함수화시킨 나의 컴포넌트들을(컴포넌트는 내가만든 React 태그다 라고 생각하면 되겠다.) 
+아래와 같은 방식으로 포함시켜주는것이다. 
+
+!!주의해야할점은 컴포넌트의 첫 글자는 반드시 대문자여야 한다!!
+만일 소문자로 시작한다면 React랑 JSX 는 이게 HTML 태그라고 생각할 것 이다. 
+*************************************************************************************************************************************
+const Container = (
+    <div>
+        <Title/>   <- 대문자!!
+        <Button/>  <- 대문자!!
+    </div>
+);
+*************************************************************************************************************************************
+
+보다시피, JSX는 어플리케이션을 여러가지 작은 요소로 나누어 관리할 수 있게 해준다. 
+사용자는 여러 요소로 잘게 쪼개서 만들어서 합쳐 주기만 하면 되는 것이다. 
+
+그러면 Container 도 함수화 시켜서 
+아래처럼 변환이 가능하겠다. 
+
+*************************************************************************************************************************************
+const Container =()=>(
+    <div>
+        <Title/>
+        <Button/>
+    </div>
+);
+ReactDOM.render(<Container/>, root);
+*************************************************************************************************************************************
+
+
+최종적으로 JSX 방식을 사용하여 작성한 코드는 아래와 같으며 
+이미지3과 같이 createElement() 를 사용할 때와 동일한 기능을 하고 있다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    const Title = ()=> (
+            <h3 
+            id="title" 
+            onMouseEnter={()=>{
+                console.log("mouse entered")
+            }}
+            >
+                Hello Im a title
+            </h3>
+    );
+    const Button = ()=>(
+        <button
+            style={{
+                backgroundColor: "tomato",
+            }}
+            onClick={()=>{
+                console.log("Im Clicked!!");
+            }}
+        >
+            Click Me!
+        
+        </button>
+    );
+    const Container =()=>(
+        <div>
+            <Title/>
+            <Button/>
+        </div>
+    );
+    ReactDOM.render(<Container/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+지금까지 배운건 어떻게 하면 컴포넌트를 다른 컴포넌트 안에 넣는가 이다. 
+그게다임.
+
+
+
+# Understanding State 
+
+React의 state에 대해 이해해보자 
+state는 기본적으로 데이터가 저장되는 곳이다. 
+
+아래의 Vanila Javascript 로 만든 예제에서는 counter를 증가시키고, 그걸 UI에 디스플레이 하고 있다. 
+이 counter를 state로 만들 수 있다.(바뀌는 data를 state로 만들 수 있다는 말)
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <span>Total Click: 0</span>
+    <button id="btn">Click me</button>    
+</body>
+<script>
+    let counter = 0;
+    const button = document.getElementById("btn");
+    const span = document.querySelector("span");
+    function handleClick(event) {
+        counter = counter + 1
+        span.innerText = `Total Click: ${counter}`
+    }
+    button.addEventListener("click", handleClick)
+</script>
+</html>
+*************************************************************************************************************************************
+
+일단 위의 기능을 구현하기 위해서 React로 가장 기본적인 뼈대를 만들어 보면 아래와 같다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    const Container =()=>(
+        <div>
+            <h3>Total clicks: 0</h3>
+            <button>Click me</button>
+        </div>
+    );
+    ReactDOM.render(<Container/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+물론 이제 eventListener 는 없지만 우리는 현재 Container가 어떤 역할을 하는지는 알고 있다. 
+React element를 생성하고 있는데 이 React element 가 곧 div 태그이고 h3 태그와 button 태그를 담고 있다. 
+
+이제 이 React 코드 내에서 카운트를 셀 수 있게 만들어야하는데 
+두가지 방법이 있다. 
+1. 구린방법 
+2. 프로페셔널한 세련된 방법
+
+일단 구린방법으로 먼저 해보고 
+이게 왜 구린지 그럼 안구리기 위해선 어떤게 필요하고, 어떤걸 해야하는지 이해하고 나서 
+프로페셔널한 세련된 방법으로 만들어보쟝 
+
+1. 구린 방법 
+
+일단 React에서는 증괄호를 통해서 변수를 연결 할 수 있다. 
+아래코드 참조
+*************************************************************************************************************************************
+const root = document.getElementById("root");
+let counter = 10;                               <- 여기서 변수 만들어준것을 
+const Container =()=>(
+    <div>
+        <h3>Total clicks: {counter}</h3>        <- 여기서 중괄호로 연결가능하다. 
+        <button>Click me</button>
+    </div>
+);
+ReactDOM.render(<Container/>, root);
+*************************************************************************************************************************************
+
+위처럼 변수를 연결하고 이제 카운트를 올려주는 함수를 만들어줘야 한다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 10;
+    function countUp(){
+        counter = counter + 1;
+    }
+    const Container =()=>(
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>
+        </div>
+    );
+    ReactDOM.render(<Container/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
