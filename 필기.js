@@ -1,4 +1,4 @@
-const { contentType } = require("express/lib/response")
+const { contentType, render } = require("express/lib/response")
 
 # Introduction 
 
@@ -747,7 +747,7 @@ React element를 생성하고 있는데 이 React element 가 곧 div 태그이�
 아래코드 참조
 *************************************************************************************************************************************
 const root = document.getElementById("root");
-let counter = 10;                               <- 여기서 변수 만들어준것을 
+let counter = 0;                               <- 여기서 변수 만들어준것을 
 const Container =()=>(
     <div>
         <h3>Total clicks: {counter}</h3>        <- 여기서 중괄호로 연결가능하다. 
@@ -758,6 +758,9 @@ ReactDOM.render(<Container/>, root);
 *************************************************************************************************************************************
 
 위처럼 변수를 연결하고 이제 카운트를 올려주는 함수를 만들어줘야 한다. 
+뭐 새로운걸 하는게 아니다. 
+button에 eventListener 연결하고 
+이 eventListener 가 countUp 함수를 호출하고 countUp은 카운트를 바꿔줄 것이다. 
 
 *************************************************************************************************************************************
 <!DOCTYPE html>
@@ -770,9 +773,83 @@ ReactDOM.render(<Container/>, root);
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
     const root = document.getElementById("root");
-    let counter = 10;
+    let counter = 0;
+    function countUp(){                                     <- 2. countUp 함수가 counter 변수의 값을 바꿔준다. 
+        counter = counter + 1;
+    }
+    const Container =()=>(
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>     <- 1. button에 eventListener 연결 후 eventListener 가 countUp 함수를 호출하면
+        </div>
+    );
+    ReactDOM.render(<Container/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 그럼 위처럼 코드를 작성해주면 이제 카운터를 변경해주니까 끝인걸까?
+당연히 아니지. 
+인생이 이렇게 쉬울리 없지. 
+버튼을 클릭하면 counter 변수값은 변한다.(콘솔창을 통해서 확인 가능)
+다만 페이지에 표시되는 "Total clicks: {counter}" 의 값은 여전히 0 이다. 
+
+왜일까?
+
+왜냐면 우리는 컴포넌트를 단 한번만 렌더링하기 때문이다. 
+
+생각을 해보면 우리가 어플리케이션을 시작했을 때 counter는 0 이다. 
+그리고 Container 는 함수라서 곧바로 실행되지 않고 
+
+ReactDOM.render(<Container/>, root);
+
+이것만 우리가 페이지를 로드했을 때 바로 실행된다. 
+그래서 이 
+ReactDOM.render(<Container/>, root); 
+코드가 실행되면 Container 컴포넌트가 렌더링 될텐데 그 말은 Container 안의 코드들
+
+<div>
+<h3>Total clicks: {counter}</h3>
+<button onClick={countUp}>Click me</button>
+</div>
+
+이 코드들이 React element 가 될거란 뜻이다. 
+
+여기서 문제가 발생한다. 
+페이지를 처음 로드했을 때 Container 가 렌더링 되고 그때의 counter 값은 0이기 때문에 
+브라우저에는 "Totla clicks: 0" 이 잘 로드되지만 
+
+그 이후 counter 값이 변할 때 마다 Container 를 리렌더링 하지 않기 때문에 
+우리가 아무리 버튼을 클릭해도 실제 브라우저에 보여지는 counter 값은 변하지 않는것이다. 
+
+그럼 당연히 새로운 버전의 Container 를 리렌더링해서 다시 보여줘야지 
+
+즉, countUp 을 호출할 때마다 
+
+ReactDOM.render(<Container/>, root);
+
+이 코드를 다시 호출하고 싶은것이다. 
+
+그렇다면 아래코드처럼 countUp 함수를 다시 실행할 때 
+ReactDOM.render(<Container/>, root);
+를 다시 호출하면 되겠다. 
+
+[이미지4도 첨부해야함]
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 0;
     function countUp(){
         counter = counter + 1;
+        ReactDOM.render(<Container/>, root);
     }
     const Container =()=>(
         <div>
@@ -784,3 +861,497 @@ ReactDOM.render(<Container/>, root);
 </script>
 </html>
 *************************************************************************************************************************************
+
+짠 위처럼 코드를 작성해주니 버튼을 클릭할 때 마다 페이지에 잘 출력이 된다. 
+어찌보면 당연한거지 
+왜냐념 리렌더링할 땐 counter 의 값이 내가 클릭한 횟수로 들어가있을테니까 
+
+그렇다면 어떤 아래처럼 render 라는 함수를 따로 만들어서 
+반복적으로 사용하기 용이한 코드로 변환시키는것이 추후 유지보수에 더욱 합리적일것이다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 0;
+    function countUp() {
+        counter = counter + 1;
+        ReactDOM.render(<Container/>, root);
+    }
+    function render() {                         <- 따로 render라는 함수를 만들어서 Container 를 리렌더링하기 용이하게 할 수 있다.
+        ReactDOM.render(<Container/>, root);
+    }
+    const Container =()=>(
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>
+        </div>
+    );
+    render();
+</script>
+</html>
+*************************************************************************************************************************************
+
+하지만 초반에 말했듯이 이것은 구린방법이다. 
+왜냐면 이건 우리가 값을 바꿀때마다, 다시 렌더링하는걸 잊어선 안되기 때문이다. 
+
+세련된 방법으로 넘어가기전에 리액트의 엄청난 장점을 짚고 넘어가보자. 
+
+Vanila Javascript 로 만들었을 경우 이미지6 처럼 
+Total clicks 를 포함하여 태그 전체를 업데이트한다. 
+하지만 React 를 사용한겨우 이미지5 처럼 
+UI에서 바뀐 숫자부분만 업데이트 해준다. 
+
+이것은 엄청나게 중요한 장점이다. 
+지금 보다시피 React JS 는 이전에 렌더링된 컴포넌트는 어떤거였는지 확인하고 
+다음에 렌더링될 컴포넌트는 어떤지를 보고 
+React JS 는 다른 부분만 파악하고나서(내가 바꾼부분)
+또다시 Totla clicks 를 생성할 필요 없이 오로지 바뀐 부분만 업데이트 해줄 수 있다. 
+
+버튼을 클릭할 때, 물론 Container 컴포넌트 전체를 리렌더링하는 것이지만 
+HTML 코드에서는 오로지 숫자만 바뀌는것이다. 
+
+이건 진짜 엄청 좋은것이다. 
+굉장히 interactivie 한 어플을 만들 수 있다는 뜻 이니까!
+
+내가 여러가지 요소들을 리렌더링하려고 해도, 전부다 새로 생성되진 않을것이다. 
+오로지 바뀐부분만 새로 생성될것이다. 
+
+
+
+
+# setState part One 
+
+일단 시작하기에 앞서 Container 컴포넌트의 이름을 App 으로 바꿔주었다. 
+(원래 다들 이렇게 이름 지음. 나는 아직 허접이니 대세를 따르자)
+
+[페이지 이미지도 하나 넣어주자]
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 0;
+    function countUp() {
+        counter = counter + 1;
+        ReactDOM.render(<App/>, root);
+    }
+    function render() {
+        ReactDOM.render(<App/>, root);
+    }
+    const App =()=>(
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>
+        </div>
+    );
+    render();
+</script>
+</html>
+*************************************************************************************************************************************
+
+위의 코드는 우리가 원하는대로 잘 동작해준다. 
+버튼을 클릭하면 페이지의 클릭 카운트가 잘 올라간다. 
+
+하지만 이전에 말했듯 이것은 구린 방법이다. 
+데이터가 바뀔때마다 이 render() 함수를 호출하는걸 잊어서는 안된다는 점 이다. 
+
+별로 즐거운 작업은 아니다. 
+리렌더링을 일으키는데 좀 더 나은 방식이 있을거다. 
+
+이제 그개 뭔지 아라보자. 
+
+우리는 counter가 0인 시점에서 최초로 렌더링을 할 것이다. 
+그리고 counter가 값을 증가시킬 때 리렌더링하게 해주었다. 
+초기 컴포넌트가 초기 데이터를 가지고 렌더링 되고, 버튼을 클릭하면 다시 렌더링하고 싶은거다. 
+
+하지만 말했듯 이것은 좋은방법이 아니다. 
+
+그래서 이제부터 Reat.js 어플 내에서 데이터를 보관하고 render() 함수를 계속 불러줄 필요 없는
+자동으로 리렌더링을 일으킬수 있는 세련된 방법을 배워볼것이다. 
+
+이제부터 React.js 가 내가 원하는 리렌더링을 어떻게 도와주는지 알아보자. 
+
+그 이유는 내가 만약 사용자에게 업데이트된걸 보여주고싶다면 새로운 정보를 가지고 컴포넌트를 리렌더링해줘야 하기 때문이다. 
+(위에서 했던말임. render() 함수로 계속 App 컴포넌트를 리렌더링 해줬잔여)
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        return (
+            <div>
+                <h3>Total clicks: 0</h3>
+                <button>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 일단 위처럼 다시 아무기능도 없는 노잼 컴포넌트로 다시 돌아가자. 
+
+자 이제 React 어플리케이션을 다룰때, 어디에 데이터를 담으면 되는지 아라보자. 
+일단 App 컴포넌트를 만들어주는 함수내에서 return문 전에 상수를 하나 만들어주고 
+그 상수에 React.useState()를 사용할것이다. 
+아래처럼 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const data = React.useState();  <- return문 전에 data 라는 상수에 React.useState() 사용
+        console.log(data);              <- 뭐가 나올까? 
+
+        return (
+            <div>
+                <h3>Total clicks: 0</h3>
+                <button>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+
+(결과 콘솔창)
+(2) [undefined, ƒ]
+0: undefined
+1: ƒ ()
+length: 2
+[[Prototype]]: Array(0)
+*************************************************************************************************************************************
+
+자 data를 출력해본 결과 undefined 값과 함수를 지닌 배열이 나왔다. 
+흥미롭다. 
+
+무슨일이 일어난거냐면 React.js가 
+const data = React.useState();
+이 코드를 가지고 
+이전에 작성했던 counter 변수와 countUp 함수의 기능을 동시에 제공해주고 있는것이다. 
+
+그래서 이 코드를 통해 얻게 되는 건 
+undefined 와 함수 하나다. 
+
+내가 알아야할것은 저 
+0: undefined <- 이게 data 이고, 이전으로 치면 counter 변수의 역할이겠지
+1: ƒ () <- 이게 data를 바꿀 때 사용하는 함수이고, 이전에 작성했던 countUp 함수의 역할을 한다. 
+
+React.useState 는 초기값을 설정할 수도 있다. 
+
+const data = React.useState(0);
+
+(콘솔 출력)
+(2) [0, ƒ]
+0: 0        <- 짠 초기값으로 0이 나옴
+1: ƒ ()
+length: 2
+[[Prototype]]: Array(0)
+
+위처럼 괄호안에 값을 넣어주면 그 값을 초기값으로 가지게 된다. 
+
+자 그렇다면 
+
+const data = React.useState(0);
+const counter = data[0];  
+const countUp = data[1];
+
+이렇게 할당해줘도 문제가 되제 않겠지 
+하지만 이걸 좀 더 세련된 문법으로 바꿔주면 
+
+const [counter, countUp] = React.useState(0);
+
+이렇게 바꿀 수 있는것을 나는 안다. 
+일단 현재까지의 코드는 아래와 같다. 
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, countUp] = React.useState(0);
+        
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 일단 counter라는 변수에 값을 담는것까지 해보았다. 
+이제 어떻게 useState를 사용하여 만든 countUp 을 이용하여 counter의 값을 바꿔줄지 
+그리고 왜 useState를 사용하여 만든 countUp이 필요한지 아라보자. 
+
+
+# setState part Two 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, countUp] = React.useState(0);
+        
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 일단 React.js가 data를 담는것과 업데이트하는걸 어떻게 도와주는지 배워봤다. 
+useStatre를 사용했을 때 useState는 우리한테 배열 하나를 주는데 
+
+그 배열의 첫번째 요소는 우리가 담으려는 counter 값이고 
+두번째 요소는 이 counter 값을 바꿀 때 사용하는 countUp 함수이다. 
+
+이제 counter를 업데이트하는데 countUp 함수를 사용해보려고 한다. 
+countUp 함수는 값을 하나 받는다. 
+
+어떤 값을 부여하던지 countUp 함수는 그 값으로 업데이트하고 리렌더링을 일으킨다. 
+
+이전에는 render() 함수에 ReactDOM.render(<App/>, root) 를 직접 실행시켜줌으로서 리렌더링을 했지만 
+(아래의 코드 참고)
+*************************************************************************************************************************************
+(이전 직접 리렌더링하던 버전)
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    let counter = 0;
+    function countUp() {
+        counter = counter + 1;
+        ReactDOM.render(<Container/>, root);
+    }
+    function render() {                         <- 따로 render라는 함수를 만들어서 Container 를 리렌더링하기 용이하게 할 수 있다.
+        ReactDOM.render(<Container/>, root);
+    }
+    const Container =()=>(
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>
+        </div>
+    );
+    render();
+</script>
+</html>
+*************************************************************************************************************************************
+
+이젠 countUp 함수를 가지고 있고, 이걸로 값을 바꿔줄 것이다. 
+이 countUp() 함수안에 직접 값을 넣어주면 어떻게 되는지 버튼에 onClick eventListener 를 추가해주고 
+확인해보면 버튼을 클릭해줬을 때 컴포넌트가 리렌더링 되면서 브라우저의 값이 바뀌는것을 볼 수 있다. 
+아주 놀랍도다. 
+
+이미지7 붙여넣자. 
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, countUp] = React.useState(0);
+        const onClick = () => {
+            countUp(987987);
+        };
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button onClick={onClick}>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+countUp 함수를 사용하여 counter 값을 변경해주자 내가 별도로 직접 리렌더링을 해주지 않아도 
+알아서 리렌더링이 되는 놀라운 광경을 목격하였다. 
+React.js 가 날 도와준것이지. 
+
+자 그럼 이제 클릭했을 때 counter 값에 1을 더해주도록 변경만 해주면 되겠다. 
+
+또한 대부분의 개발자들은 counter 처럼 받는 데이터 값은 지들맘대로 이름 붙이지만 
+countUp 처럼 값을 수정해주는 함수는 앞에 set을 붙여서 setCounter 라고 이름을 붙인다. 
+나는 아직 허접이니까 그들을 따라해야한다. 
+
+이렇게 만든 최종본이 아래와 같다. 
+
+*************************************************************************************************************************************
+(useState 를 이용한 자동 리렌더링)
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, setCounter] = React.useState(0);
+        const onClick = () => {
+            setCounter(counter + 1);
+        };
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button onClick={onClick}>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+우리는 counter 라는 데이터를 받아서 
+App 컴포넌트의 return 값에 그 데이터를 담고 있다. 
+
+그 말인 즉, 
+
+<div>
+    <h3>Total clicks: {counter}</h3>
+    <button onClick={onClick}>Click me</button>
+</div>
+
+이 부분이 사용자가 보게될 컴포넌트라는 뜻이다. 
+그리고 버튼이 클릭되면, counter 값을 바꿔줄 함수를 호출할건데 
+counter의 새로운 값을 가지고 해당 함수를 호출해줄거다. 
+
+그 새로운 값은 현재 counter값 +1 이 될것이고 말이다. 
+
+그리고 물론 이것이 리렌더링되는 과정에서 React.js는 오로지 바뀌는 숫자 부분만을 업데이트 해주고 있따. 
+React의 매직이지. 
+React는 업데이트 사이사이마다, 정확히 어떤것이 업데이트됐는지 파악해서 
+HTML에서 그 부분만 고친다. 
+
+
+PS. 
+setCounter 를 사용하여 state 값을변경해주면 컴포넌트 자체가 새로 생성된다는 뜻이다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, setCounter] = React.useState(0);
+        const onClick = () => {
+            setCounter(counter + 1);
+        };
+        console.log("rendered");
+        console.log(counter);
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button onClick={onClick}>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+위처럼 App 컴포넌트 함수안에 새로 실행될 때 마다 counter 값과 "rendered" 라는 텍스트를 출력하도록 작성 후 버튼을 계속 클릭해보면 
+하기 이미지처럼 콘솔창에 계속해서 출력이 되는것을 볼 수 있다. 
+
+이미지8 이미지 첨부 
+
+즉, 컴포넌트 자체가 새로 재생성 된것이다. 
+이게 바로 React.js 가 제공하는 가장 중점적인 부분이다. 
+
+데이터가 바뀔때마다 컴포넌트를 리렌더링하고 UI를 refresh 하는것이다. 
+그리고 물론 HTML을 전부다 바꾸는게 아니라 내가 수정하는 부분만 바뀌는 것이다. 
+
+Vanila Javascript 와 비교하면 여러가지로 장점이 많은것 같다. 
+HTML 요소를 생성하거나 찾을 필요도 없고 
+eventListener 를 더해줄 필요도 UI를 업데이트해줄 필요도 없다. 
+바로 HTML을 만들어서 거기에 곧바로 eventListener 를 더해주고(onClick 그냥 바로 꽂아버림)
+그리고 UI를 자동으로 리렌더링 해준다. 
+
+
+
+# State Functions 
+
+state에 대해 배웠고 이걸 계속 연습하는 시간을 가질것이다. 
+그리고 사용자들의 input을 어떻게 얻는지, 
+form을 만들었을 때 state는 어떤식으로 작용하는지에 대해도 알아볼것이다. 
+
+
