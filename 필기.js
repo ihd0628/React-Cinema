@@ -137,7 +137,7 @@ HTML 코드를 직접 작성하지 않고 JS와 ReactJS 코드를 사용하여 s
 </html>
 *******************************************************************************************************************
 
-일단 위의 흰 도화기같은 코드에서 클릭을 감지하기 위해 span을 하나 만들어 줄건데
+일단 위의 흰 도화자같은 코드에서 클릭을 감지하기 위해 span을 하나 만들어 줄건데
 const span = React.createElement("span") 를 통해 생성할 수 있다. 
 (위에서 리액트를 import 했기 때문에 createElement function을 가진 React object에 접근할 수 있다.
 
@@ -236,7 +236,8 @@ const span = React.createElement("span", { id : "sexy-span" }, "Hello im a span"
 
 단지 빨간 span을 페이지에 두는데 너무 많은 코드가 사용된다고 생각이 든다면 
 그 생각이 맞다. 
-뭐 root 생성하고, 리액트 2개 import 하고, root 가져오고, element 생성하고, 그 element 를 render 해야한다. 
+뭐 root 생성하고, 리액트 2개 import 하고, rootimport { disabled } from "express/lib/application"
+ 가져오고, element 생성하고, 그 element 를 render 해야한다. 
 고작 span 을 페이지에 두는 것일 뿐인데 말이다. 
 
 이럴거면 차라리 그냥 HTML에 한줄 쓰는게 좋을것같은데 말이다. 
@@ -259,7 +260,7 @@ React JS 가 element를 생성하고 있으니,  이 말은 React JS 는 업데�
 자 명심할것은 
 const span = React.createElement(..)
 에서 Javascript를 이용하여 element를 생성하였고 
-React JS 가 그걸 HTMl 로 번역한다는 점이다. 
+React JS 가 그걸 HTML 로 번역한다는 점이다. 
 
 
 
@@ -339,7 +340,7 @@ React JS 가 그걸 HTMl 로 번역한다는 점이다.
 
 하지만 내가 하고자 하는것의 본질은 태그를 만들기만 하는것이 아니라 
 태그를 만들고 그것을 가져온 뒤 addEventListener 를 붙이고 
-그 다음에 lisener function을 붙이는 것이다. 
+그 다음에 listener function을 붙이는 것이다. 
 
 하지만 우린 위의 내용을 다 해주는 대신에, React JS를 통해서 button 에 property 를 줄 수 있다. 
 그리고 그 propery에 eventListener 를 주는것이다. 
@@ -864,7 +865,7 @@ ReactDOM.render(<Container/>, root);
 
 짠 위처럼 코드를 작성해주니 버튼을 클릭할 때 마다 페이지에 잘 출력이 된다. 
 어찌보면 당연한거지 
-왜냐념 리렌더링할 땐 counter 의 값이 내가 클릭한 횟수로 들어가있을테니까 
+왜냐면 리렌더링할 땐 counter 의 값이 내가 클릭한 횟수로 들어가있을테니까 
 
 그렇다면 어떤 아래처럼 render 라는 함수를 따로 만들어서 
 반복적으로 사용하기 용이한 코드로 변환시키는것이 추후 유지보수에 더욱 합리적일것이다. 
@@ -1354,4 +1355,782 @@ state에 대해 배웠고 이걸 계속 연습하는 시간을 가질것이다.
 그리고 사용자들의 input을 어떻게 얻는지, 
 form을 만들었을 때 state는 어떤식으로 작용하는지에 대해도 알아볼것이다. 
 
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, setCounter] = React.useState(0);
+        const onClick = () => {
+            setCounter(counter + 1);
+        };
+        console.log("rendered");
+        console.log(counter);
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button onClick={onClick}>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+위의 코드는 별로 좋은 방법이 아니다. 
+왜냐하면 counter는 다른곳에서 update 될 수 있기 때문이다. 
+어쩌면 counter가 다른곳에서 변경이 되어서 내가 생각했던 값이 아닐 수 있다. 
+이전 단계의 state를 이용해서 현재 state를 바꾸려 했지만, 결과가 예상과 다르게 나오는것이다. 
+
+state를 변경함에 있어서 두가지 방법이 있는데 
+하나는 직접 값을 입력해주는 방법
+
+const onClick = () => {
+    setCounter("직접값을 입력");
+};
+
+
+두번째는 이전 값을 이용해서 현재 값을 계산해 내는 방법. 
+
+const onClick = () => {
+    setCounter(counter + 1);
+};
+
+현재 두번쨰 방법을 사용하면서 위와같은 코드를 사용했지만 이것보다 더 나은 방법이 있다. 
+
+위의 코드에서는 현재의 counter값을 가지고 계산해주고 있다. 
+만약 내가 현재 값을 가지고 계산 해야한다면 
+setCounter() 함수안에 함수를 인자로 넣는것이다. 
+
+이 함수의 첫번째 인자는 현재의 값이다.(현재 counter값)
+그리고 이 함수의 return 값이 새로운 state가 되는것이다. 
+
+const onClick = () => {
+    setCounter(current => current + 1);
+};
+
+자 그럼 두개를 비교해보자. 
+
+1.
+const onClick = () => {
+    setCounter(counter + 1);
+};
+
+2.
+const onClick = () => {
+    setCounter(current => current + 1);
+};
+
+사실 이 두개는 똑같은 작업을 한다. 
+둘다 현재의 state를 가지고 새로운 값을 계산해낸다. 하지만 2번이 더 안전하다. 
+왜냐하면 current 값은 확실히 현재 값이라는걸 리액트가 보장하기 때문이다. 
+
+state에 저장되어있는 레알 현재값이라는 거지. 
+counter는 내가 state의 값을 받아서 따로 변수에 넣은것이고 그것은 다른 실수로 인해 건들 수 있지만 
+저것은 레알 state의 현재값 이라는 것이 보장이 된다는것이지. 
+
+짠 그럼 코드를 아래처럼 바꿔주는게 더 안전하겠다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [counter, setCounter] = React.useState(0);
+        const onClick = () => {
+            setCounter(current => current + 1);
+        };
+        console.log("renderd");
+        console.log(counter);
+        return (
+            <div>
+                <h3>Total clicks: {counter}</h3>
+                <button onClick={onClick}>Click me</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+
+
+# Inputs and State 
+
+단위 변환 앱을 만들어 볼것이다. 
+분 -> 시간, 시간 -> 분 뭐 이렇게 변환시켜주는 앱 이다. 
+일단 아래처럼 input box 2개를 넣어주고 각각 시간과 분을 의미해주도록 placeholder 를 달아준다. 
+
+이미지9 넣어야함. 
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        return (
+            <div>
+                <h1>Super Converter</h1>
+                <input placeholder="Minutes" type="number" />
+                <input placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이제 JSX 에 대한 떠 새로운것이 등장한다. 
+봐왔다시피 JSX는 HTML과 매우 유사하다. 
+
+내가 만든 input 태그들은 전부 HTML로 써도 전혀 문제가 되지 않는다.
+요 코드에 label 태그를 예로들어보자. 
+label은 input 옆에 써주는 글씨이다. 
+만약 누가 이 label을 클릭하면 그 옆 input이 선택된다. 
+
+아래처럼 Minutes, Hours 라는 label 을 만들고 이 label을 input에 연결시키기 위해 
+input은 id가 있어야한다. 
+
+그리고 label 에 "for" 속성의 값을 연결시키고자 하는 input 의 id 값과 같게 입력함으로서 
+label과 input은 서로 연결되게 된다. 
+연결되면 label을 클릭하면 input에 값을 입력할 수 있게 된다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        return (
+            <div>
+                <h1>Super Converter</h1>
+                <label for="minutes">Minutes</label>                        <- 여기에 for 값과 
+                <input id="minutes" placeholder="Minutes" type="number" />  <- 여기 id 값이 일치되면 연결된다. 
+                <label for="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+하지만 이것은 기존 HTML에서 쓰는 방법이고 
+리액트 즉, JSX에서는 다르게 표현해줘야 한다. 
+
+근데 에러가 나지 않은 이유는 production.min.js 를 사용중이기 때문이다. 
+
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+
+만일 이것을 developement.min.js 로 바꾸면 에러가 뜬다. 
+
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script> 
+
+(에러 메세지)
+react-dom.development.js:61 Warning: Invalid DOM property `for`. Did you mean `htmlFor`?
+    at label
+    at div
+    at App
+
+보다시피 유효하지 않은 DOM propery 'for' 가 있다고 에러를 띄운다. 
+"HTML for 를 의미하니?" 라고도 물어본다. 
+
+왜 for 같은 몇가지 용어들을 사용할 수 없냐면 일단 for는 Javascript 용어이기 때문이다. 
+마치 class같은 용어도 Javascript 용어인것처럼 이미 선점된 단어이다. 
+
+아래처럼 h1에 class를 지정해줘도 동일한 에러가 나온다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        return (
+            <div>
+                <h1 class="title">Super Converter</h1>
+                <label for="minutes">Minutes</label>
+                <input id="minutes" placeholder="Minutes" type="number" />
+                <label for="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+
+(에러메세지)
+react-dom.development.js:61 Warning: Invalid DOM property `class`. Did you mean `className`?
+    at h1
+    at div
+    at App
+
+react-dom.development.js:61 Warning: Invalid DOM property `for`. Did you mean `htmlFor`?
+    at label
+    at div
+    at App
+*************************************************************************************************************************************    
+
+이러한것들은 JSX에 맞게 그 이름을 변경하여 사용해주면 된다. 
+class=> className 
+for=> htmlFor 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>                  <- JSX에 맞게 이름 변경
+                <label htmlFor="minutes">Minutes</label>                    <- JSX에 맞게 이름 변경
+                <input id="minutes" placeholder="Minutes" type="number" />
+                <label htmlFor="hours">Hours</label>                        <- JSX에 맞게 이름 변경
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이제부터가 중요하다. 
+minutes에 필요한 state를 이제 만들어 보자. 
+그전에 문제가 한가지 있는데 input 박스 안의 value를 어떻게 얻는지 아직 모른다는 점이다. 
+아직 리액트로 하는법은 배우지 못했다. 
+
+리액트에서 input은 uncontrolled 라고 알려져있다. 
+그 말인 즉, input의 value는 내가 통제할 수 없다는 뜻이다. 
+
+그래서 이제 state를 만들어 줄거다. 
+state의 default값은 null, 아무것도 안적어줄것이다. 
+
+아래처럼 현재값을 minutes 변수에 받고 minutes를 수정해주는 modifier는 setMinutes 라고 정의한다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState();
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <label htmlFor="minutes">Minutes</label>
+                <input id="minutes" placeholder="Minutes" type="number" />
+                <label htmlFor="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+그리고 이제 value를 input에게 줄 수 있다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState();
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <label htmlFor="minutes">Minutes</label>
+                <input 
+                    value={minutes}                     <- state 를 input의 value로 주었다. 
+                    id="minutes" 
+                    placeholder="Minutes" 
+                    type="number" 
+                />
+                <label htmlFor="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이제 minute의 값을 넣어주는 input이 있고, 
+그리고 그 값은 minutes 가 될거다. 
+그리고 minutes 은 state에 있다. 
+
+이제 해야할것은 사용자가 다른 값을 입력할 때마다 이 value를 업데이트 시키는거다. 
+사용자가 input에 새로운 값을 입력할 때마다 이 state를 업데이트 하고싶다. 
+
+그리고 이 새로운 값을 입력할 때 발생하는 event가 change 이고 JSX니까 onchange 라고 해줘야한다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState();
+        const onChange = () => {
+            console.log("Somebody Wrote");
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <label htmlFor="minutes">Minutes</label>
+                <input 
+                    value={minutes}
+                    id="minutes" 
+                    placeholder="Minutes" 
+                    type="number" 
+                    onChange={onChange}         <- input박스에 뭔가 값이 입력되었을 때 감지하는 이벤트리스너
+                />
+                <label htmlFor="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 위의 코드 즉, 지금까지의 내용을 정리해보면 
+우린 react에서 가져온 state를 사용하고 있다. 
+이 state에서 우리는 데이터도 얻고, 덥데이트도 진행하고 있다. 
+
+array의 첫번째 item 인 minutes는 state의 value 다. 
+두번째 item은 value를 수정하고, 컴포넌트를 새로고침할 때 쓰는 함수다. 
+
+그리고 여기선 state로써 mimutes 라는 값을 가지고 있는데, 
+우리가 할 건 이 minutes 값을 input의 value로 넣어주는것이다. 
+그럼 input의 value는 state의 value와 같아지는 셈이다. 
+
+그리고 이젠 input의 변화가 생길때마다 그 변화를 리스닝 하려고 한다. 
+여기서 변화는, 사용자가 input에 뭔가를 입력하는것을 말한다. 
+그것을 위해 onChange를 통해 이벤트를 리스닝하고 있다. 
+
+이제 input에 변화가 생기면, onChange 함수를 실행시켜줄거다. 
+그리고 일단은 onChange 함수는 그냥 
+console.log("Somebody Wrote"); 를 실행시켜주고 있다. 
+그리고 Minutes input에 뭔가를 입력할 때 마다 
+"Somebody Wrote" 가 콘솔창에 잘 출력이 되는걸 볼 수 있다. 
+
+{이미지10 넣자.}
+
+이제 난 이 input의 입력값을 알고 싶다. 
+왜냐면 우리가 입력한 분단위의 값을 시간단위로 변경시키려면 
+일단 분단위값에 얼마를 입력했는지 알아야 그걸 가지고 뭘 지지고볶고 할것이 아닌가. 
+
+React의 한가지 좋은점중 하나는 거의 일반적인 Javascript 와 같다는 점이다. 
+
+{이미지11 넣자}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState();
+        const onChange = (event) => {
+            console.log(event);
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <label htmlFor="minutes">Minutes</label>
+                <input 
+                    value={minutes}
+                    id="minutes" 
+                    placeholder="Minutes" 
+                    type="number" 
+                    onChange={onChange}
+                />
+                <label htmlFor="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+위처럼 onChange 함수의 인자로 event 를 해주면 Synthetic Event 라는게 뜬다. 
+이런게 왜 끄냐면 React JS는 가짜 event를 발생시킨다. 
+
+왜냐면 리액트는 event를 최적화 시키기 때문이다. 
+하지만 내가 원래의 event를 얻고싶다면 
+Synthetic Event 객체안에 nativeEvent 라는 프로퍼티를 통해서 얻을 수 있다. 
+(nativeEvent === native Javascript Event)
+
+Synthetic(합성) 이라는 말이 붙어서 뭔가 싶지만 사실 요지는 내가 event에 접근할 수 있다는 것이고
+또한 Synthetic Event 객체 안에 target을 가지고 있다는 것이다. 
+이 tartget 프로퍼티는 방금 바뀐 input 을 말하고
+target 안의 value 값을 통해 내가 입력한 값을 추출할 수 있다. 
+
+자 그러믄 아래코드처럼 event.target.value 를 통해서 내가 입력한 값을 얻을 수 있겠다. 
+
+{이미지 12}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState();
+        const onChange = (event) => {
+            console.log(event.target.value);            <- evetn.target.value 를 통해 입력한 값을 추출
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <label htmlFor="minutes">Minutes</label>
+                <input 
+                    value={minutes}                 <- input 값을 외부에서도 수정해주기 위해서 value값에도 minutes 를 넣어줌. 
+                    id="minutes"                        에를들면 reset 버튼을 눌렀을 때 input안의 값도 reset이 되게한다던지.
+                    placeholder="Minutes" 
+                    type="number" 
+                    onChange={onChange}
+                />
+                <label htmlFor="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+이게 리액트에서 form을 다루는 방법이다. 
+
+자 이제 value를 가지고 있으니 이걸 minutes에 넣어줄거다. 
+그리고 state data 를 업데이트하는 방법은 setState 함수를 사용하는것이다. 
+그러니 나는 setMinutes() 함수를 사용하여 값을 바꿔주면 된다. 
+
+
+
+
+
+
+
+
+# State Practice part One 
+
+input 의 value 가 state의 데이터 일 때 
+즉, 
+<input 
+    value={minutes}                 
+    id="minutes"                    
+    placeholder="Minutes" 
+    type="number" 
+    onChange={onChange}
+/>
+
+일 때 input 박스 안의 값을 입력하여 변경시키기 위해서는 
+1. eventListener 를통해 event를 들어주는것
+2. event 발생 시 값을 업데이트해주고(setState), UIdp qhduwnsmsrjt 
+둘다 필요하다. 
+
+만일 하나라도 없다면 백날천날 input 박스안에 값을 입력해도 어떠한 값도 UI상에 보여지지 않는다. 
+왜냐하면 input의 value는 state의 data 인데 그 data는 setState()함수를 통해서만 변경되기 때문이다. 
+setState()함수를 사용하여 변경하지 않다면 default값으로만 계속 유지가 된다. 
+
+자 위의 두가지를 만족시키도록 아래처럼 코드를 작성하였고 
+현재 통제되는(controlled) input을 가지고 있고, event도 리스닝하고 있다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <label htmlFor="minutes">Minutes</label>
+                <input 
+                    value={minutes}
+                    id="minutes" 
+                    placeholder="Minutes" 
+                    type="number" 
+                    onChange={onChange}
+                />
+                <label htmlFor="hours">Hours</label>
+                <input id="hours" placeholder="Hours" type="number" />
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이제 hours input도 통제되도록 만들것인데 
+hours input의 value 또한 mimutes를 주어서 
+state인 minutes를 값으로 리스닝하는 두개의 input을 만들어주었다. 
+자 이렇게 해주면 Minutes input의 값을 고쳐줄 때마다 Hours도 똑같이 고쳐지는걸 볼 수 있다. 
+
+하지만 아직 Hours의 값을 고칠 순 없지. 
+왜냐하면 onChange event에 대한 설정을 안해줬기 때문이다. 
+
+
+{이미지13 넣어줘}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={minutes}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                    />
+                </div>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이제 거의 끝났다. 
+이제 분을 시단위로 고쳐주는 공식만 알아보면 된다. 
+아주 간단하지. 
+60으로 나눠주면 되지. 
+아주 완벽하게 동작하는것을 볼 수 있다. 
+
+{이미지14 넣자}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={minutes}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                    />
+                </div>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+정리하자면 state를 60으로 나눠서 보여주는것이다. 
+그리고 이 state는 onChange() 함수에서 바꿔주고 있기 때문에 
+setMimutes() 함수를 통해서 새로 업데이트 된 값을 가지고, 이 모든 코드가 다시 한번 rendered 되는 것이다. 
+
+그리고 우리는 마법의 리액트를 쓰기 때문에 HTML 전체가 업데이트 되는게 아니라 
+Minutes와 Hours의 value 값만 업데이트가 되는것이다. 
+
+추가적으로 reset 버튼을 만들어서 reset 버튼을 누르면 0으로 값이 바뀌게 만들고
+또한 Hours input에 disabled 속성을 추가하여 아예 값 입력이 안되도록 만들어 주었다. 
+
+{이미지15 넣자}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={minutes}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled
+                    />
+                </div>
+                <button onClick={reset}>reset</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이제 Minutes input 박스에만 뭔가를 쓸 수 있고 
+Hours input 박스는 클릭이 안되서 아무것도 못쓴다. 
 

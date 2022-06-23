@@ -4,21 +4,42 @@
     <div id="root"></div>
 </body>
 <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
     const root = document.getElementById("root");
     function App() {
-        const [counter, setCounter] = React.useState(0);
-        const onClick = () => {
-            setCounter(counter + 1);
-        };
-        console.log("renderd");
-        console.log(counter);
+        const [minutes, setMimutes] = React.useState(0);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
         return (
             <div>
-                <h3>Total clicks: {counter}</h3>
-                <button onClick={onClick}>Click me</button>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={minutes}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled
+                    />
+                </div>
+                <button onClick={reset}>reset</button>
             </div>
         );
     }
