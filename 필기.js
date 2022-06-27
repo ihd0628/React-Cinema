@@ -236,7 +236,16 @@ const span = React.createElement("span", { id : "sexy-span" }, "Hello im a span"
 
 단지 빨간 span을 페이지에 두는데 너무 많은 코드가 사용된다고 생각이 든다면 
 그 생각이 맞다. 
-뭐 root 생성하고, 리액트 2개 import 하고, rootimport { disabled } from "express/lib/application"
+뭐 root 생성하고, 리액트 2개 import 하고, rootimportimportimportimportimportimportimportimportimportimport { text } from "express"
+ { disabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
+ { enabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
+ { disabled } from "express/lib/application"
  가져오고, element 생성하고, 그 element 를 render 해야한다. 
 고작 span 을 페이지에 두는 것일 뿐인데 말이다. 
 
@@ -1088,7 +1097,7 @@ const data = React.useState(0);
 const counter = data[0];  
 const countUp = data[1];
 
-이렇게 할당해줘도 문제가 되제 않겠지 
+이렇게 할당해줘도 문제가 되지 않겠지 
 하지만 이걸 좀 더 세련된 문법으로 바꿔주면 
 
 const [counter, countUp] = React.useState(0);
@@ -1155,7 +1164,7 @@ const [counter, countUp] = React.useState(0);
 *************************************************************************************************************************************
 
 자 일단 React.js가 data를 담는것과 업데이트하는걸 어떻게 도와주는지 배워봤다. 
-useStatre를 사용했을 때 useState는 우리한테 배열 하나를 주는데 
+useState를 사용했을 때 useState는 우리한테 배열 하나를 주는데 
 
 그 배열의 첫번째 요소는 우리가 담으려는 counter 값이고 
 두번째 요소는 이 counter 값을 바꿀 때 사용하는 countUp 함수이다. 
@@ -1336,7 +1345,7 @@ setCounter 를 사용하여 state 값을변경해주면 컴포넌트 자체가 �
 이미지8 이미지 첨부 
 
 즉, 컴포넌트 자체가 새로 재생성 된것이다. 
-이게 바로 React.js 가 제공하는 가장 중점적인 부분이다. 
+이게 바로 React.js 가 제공하는 useState의 가장 중점적인 부분이다. 
 
 데이터가 바뀔때마다 컴포넌트를 리렌더링하고 UI를 refresh 하는것이다. 
 그리고 물론 HTML을 전부다 바꾸는게 아니라 내가 수정하는 부분만 바뀌는 것이다. 
@@ -1504,7 +1513,7 @@ counter는 내가 state의 값을 받아서 따로 변수에 넣은것이고 그
 </html>
 *************************************************************************************************************************************
 
-자 이제 JSX 에 대한 떠 새로운것이 등장한다. 
+자 이제 JSX 에 대한 새로운것이 등장한다. 
 봐왔다시피 JSX는 HTML과 매우 유사하다. 
 
 내가 만든 input 태그들은 전부 HTML로 써도 전혀 문제가 되지 않는다.
@@ -1726,7 +1735,7 @@ state의 default값은 null, 아무것도 안적어줄것이다.
 이제 해야할것은 사용자가 다른 값을 입력할 때마다 이 value를 업데이트 시키는거다. 
 사용자가 input에 새로운 값을 입력할 때마다 이 state를 업데이트 하고싶다. 
 
-그리고 이 새로운 값을 입력할 때 발생하는 event가 change 이고 JSX니까 onchange 라고 해줘야한다. 
+그리고 이 새로운 값을 입력할 때 발생하는 event가 change 이고 JSX니까 onChange 라고 해줘야한다. 
 
 *************************************************************************************************************************************
 <!DOCTYPE html>
@@ -1767,7 +1776,7 @@ state의 default값은 null, 아무것도 안적어줄것이다.
 
 자 위의 코드 즉, 지금까지의 내용을 정리해보면 
 우린 react에서 가져온 state를 사용하고 있다. 
-이 state에서 우리는 데이터도 얻고, 덥데이트도 진행하고 있다. 
+이 state에서 우리는 데이터도 얻고, 업데이트도 진행하고 있다. 
 
 array의 첫번째 item 인 minutes는 state의 value 다. 
 두번째 item은 value를 수정하고, 컴포넌트를 새로고침할 때 쓰는 함수다. 
@@ -1834,7 +1843,7 @@ React의 한가지 좋은점중 하나는 거의 일반적인 Javascript 와 같
 
 
 위처럼 onChange 함수의 인자로 event 를 해주면 Synthetic Event 라는게 뜬다. 
-이런게 왜 끄냐면 React JS는 가짜 event를 발생시킨다. 
+이런게 왜 뜨냐면 React JS는 가짜 event를 발생시킨다. 
 
 왜냐면 리액트는 event를 최적화 시키기 때문이다. 
 하지만 내가 원래의 event를 얻고싶다면 
@@ -1913,7 +1922,7 @@ input 의 value 가 state의 데이터 일 때
 
 일 때 input 박스 안의 값을 입력하여 변경시키기 위해서는 
 1. eventListener 를통해 event를 들어주는것
-2. event 발생 시 값을 업데이트해주고(setState), UIdp qhduwnsmsrjt 
+2. event 발생 시 값을 업데이트해주고(setState), UI에 보여주는것
 둘다 필요하다. 
 
 만일 하나라도 없다면 백날천날 input 박스안에 값을 입력해도 어떠한 값도 UI상에 보여지지 않는다. 
@@ -2133,4 +2142,998 @@ Minutes와 Hours의 value 값만 업데이트가 되는것이다.
 
 자 이제 Minutes input 박스에만 뭔가를 쓸 수 있고 
 Hours input 박스는 클릭이 안되서 아무것도 못쓴다. 
+
+
+
+
+
+
+# State Practice part Two 
+
+단위 변환을 뒤집어보는 함수(flip_function)을 만들어볼것이다. 
+일단 동작을 위한 버튼을 만들고 상태감지를 위해 flip이라는 새로운 state를 만들고 
+flip state를 컨트롤하기위한 onFlip 이라는 함수를 만들어 준다. 
+
+그리고 만약 이 onFlip 효과를 가진 버튼이 눌리게 되면 
+flip state의 값이 true <-> false 가 변환되게 할 것이다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const [flipped, setFlipped] =React.useState(false);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        const onFlip = () => setFlipped(!flipped);
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>Flip</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 위의 코드를 통해서 하고있는건 
+현재 state를 바탕으로 새로운 state를 계산해내는 것이다. 
+
+하지만 전에 봤듯이 다음 state의 계산을 변수에 할당된 값을 바탕으로 하는 건 좋지 못하다. 
+(변수의 값은 다른 요인으로 인해 실수로 바뀔수도 있기 때문)
+그러니 setFlipped 함수안에 새로운 함수의 첫번째 인자는 현재 state 값이라는걸 이용하여 그 결과를 반대로 도출하라고 명령해주면 된다. 
+아래의 코드 참고 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const [flipped, setFlipped] =React.useState(false);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        const onFlip = () => setFlipped(current => !current); <- 함수의 인자로 state 변경 활용 
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>Flip</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+Flip 이라는 버튼을 만들고 flipped 라는 state를 만들어서 state의 value를 true <-> false 로 변환되게 만들어주었다. 
+그 이유가 무엇일까? 
+input 박스의 disabled 를 이 true 와 false 를 통해 제어할 수 있기 때문이다. 
+
+<input 
+    value={minutes/60}
+    id="hours" 
+    placeholder="Hours" 
+    type="number" 
+    disabled={true or false}
+/>
+
+이렇게 disabled 값이 true냐 false냐에 따라 disabled 가 적용이 되냐 안되냐를 결정된다. 
+이것은 아주 반가운 뉴스다. 
+왜냐하면 이제 state 값으로 input을 enabled 할지 disabled 할지 결정할 수 있기 때문이다. 
+
+그 말은 즉, filpped 가 false 이면, Hours 는 disabled 되어야한다는 뜻이다. 
+다시 말하면, flipped 가 false 라면, Hours의 disabled 는 true 가 되어야 하는거다. 
+
+또한 flipped 가 true 이면, Minutes 는 disabled 되어야한다는 뜻이다. 
+즉, flipped 가 true 이면, Minutes의 disabled는 true가 되어야 한다는 뜻이다. 
+
+그렇다면 아래의 코드로 표현할수 있겠다. 
+
+<input 
+    value={minutes/60}
+    id="hours" 
+    placeholder="Hours" 
+    type="number" 
+    disabled={flipped === false}
+/>
+
+<input 
+    id="minutes" 
+    placeholder="Minutes" 
+    type="number" 
+    onChange={onChange}
+     disabled={flipped === true}
+/>
+
+전체 코드는 아래와같으며 또란 아래의 이미지처럼 
+Flip 버튼을 클릭하면 input 박스의 disabled 상태가 Minutes와 Hours 를 번갈아 가면서 나타난다. 
+
+{이미지16-1, 16-2 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const [flipped, setFlipped] =React.useState(false);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        const onFlip = () => setFlipped(current => !current);
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                        disabled={flipped === true}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled={flipped === false}
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>Flip</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+이런식으로 prop(disabled가 prop중 하나잔어 id도 prop이고 type도 prop 이고)
+을 전달할수도 있다. 
+
+하지만 사실 이건 true냐 false냐로 평가하는 일반적인 JS 코드다. 
+이건 그냥 JS코드를 사용할 수 있다는 예시이고 사실 더 짧게 표현하고 싶다면 
+아래처럼만 해줘도 된다. 
+
+*************************************************************************************************************************************
+(긴 버전)
+<input 
+    value={minutes/60}
+    id="hours" 
+    placeholder="Hours" 
+    type="number" 
+    disabled={flipped === false}
+/>
+
+<input 
+    id="minutes" 
+    placeholder="Minutes" 
+    type="number" 
+    onChange={onChange}
+     disabled={flipped === true}
+/>
+
+(짧은 버전)
+<input 
+    value={minutes/60}
+    id="hours" 
+    placeholder="Hours" 
+    type="number" 
+    disabled={flipped}
+/>
+
+<input 
+    id="minutes" 
+    placeholder="Minutes" 
+    type="number" 
+    onChange={onChange}
+     disabled={!flipped}
+/>
+*************************************************************************************************************************************
+
+자 이제 Hours input의 change event를 리스닝 할 것이다. 
+왜냐하면 flip을 하고 enabled 된 Hours에 아직 아무것도 쓸 수 없기 때문이다. 
+
+1. 일단 뭔가 입력되어 변화가 있을 떄를 감지하기 위해 onChange 함수를 통해 입력값을 받아줄 수 있게 해준다. 
+2. Hours의 value는 flipped 의 값에 따라 그대로 입력값을 받을지 아니면 Minutes input의 값에 따라 계산된 결과를 보여줄지 정해준다.
+3. Mintes의 value 또한 flipped의 값에 따라 2.처럼 다르게 동작하도록 정해준다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App() {
+        const [minutes, setMimutes] = React.useState(0);
+        const [flipped, setFlipped] =React.useState(false);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        const onFlip = () => {
+            reset();
+            setFlipped(current => !current);
+        }
+        return (
+            <div>
+                <h1 className="title">Super Converter</h1>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={flipped ? minutes*60 : minutes}
+                            <- 3. Minutes의 value 또한 flipped의 값에 따라 2.처럼 다르게 동작하도록 정해준다. 
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                        disabled={flipped}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={flipped ? minutes : minutes/60}
+                            <-2. Hours의 value는 flipped 의 값에 따라 그대로 입력값을 받을지 
+                                아니면 Minutes input의 값에 따라 계산된 결과를 보여줄지 정해준다.
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled={!flipped}
+                        onChange={onChange} 
+                            <- 1. 일단 뭔가 입력되어 변화가 있을 떄를 감지하기 위해 onChange 
+                                  함수를 통해 입력값을 받아줄 수 있게 해준다. 
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>Flip</button>
+            </div>
+        );
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+# 복습 및 예제 
+
+KmToMiles 를 변환해주는 똑같은 변환기를 만들고 
+선택을 통해 KmtoMiels & MinutesToHours 중 하나를 페이지에 띄워서 사용할 수 있는 어플리케이션을 만들어보아라. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function MinutesToHours() {
+        const [minutes, setMimutes] = React.useState(0);
+        const [flipped, setFlipped] =React.useState(false);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        const onFlip = () => {
+            reset();
+            setFlipped(current => !current);
+        }
+        return (
+            <div>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={flipped ? minutes*60 : minutes}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                        disabled={flipped}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={flipped ? minutes : minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled={!flipped}
+                        onChange={onChange}
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>{flipped ? "Turn back" : "Invert"}</button>
+            </div>
+        );
+    }
+    function KmToMiles() {
+        const [length, setLength] = React.useState(0);
+        const [select, setSelect] = React.useState(true);
+        const onChange = (event)=>{
+            setLength(event.target.value);
+        }
+        const onReset = ()=>{
+            setLength(0);
+        }
+        const onSelect = ()=>{
+            setSelect(!select);
+            onReset();
+        }
+        return(
+            <div>
+                <div>
+                    <h2>KM 2 Miles</h2>
+                    km    
+                    <input
+                        id="Km"
+                        value={select === true ? length : length/0.621371}
+                        onChange={onChange}
+                        disabled={!select}
+                    />
+                </div>
+                <div>
+                    mile
+                    <input
+                        id="Mile"
+                        value={select === true ? length*0.621371 : length}
+                        onChange={onChange}
+                        disabled={select}
+                    />
+                </div>
+                <button onClick={onReset}>Reset</button>
+                <button onClick={onSelect}>{select === true ? "Invert" : "Turn back"}</button>
+            </div>
+            
+        );
+    }
+    function App() {
+        const [index, setIndex] = React.useState("1");
+        const onSelect = (event)=>{
+            setIndex(event.target.value);
+        };
+        return (
+            <div>
+                <h1>Super Converter</h1>
+                <select
+                    value={index}
+                    onChange={onSelect}
+                >
+                    <option value="0">Minutes & Hours</option>
+                    <option value="1">Km & Miles</option>
+                </select>
+                <hr/>
+                {index === "0" ? <MinutesToHours/> : null}
+                {index === "1" ? <KmToMiles/> : null}
+            </div>
+        )
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+
+
+# Props 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function MinutesToHours() {
+        const [minutes, setMimutes] = React.useState(0);
+        const [flipped, setFlipped] =React.useState(false);
+        const reset = () => {
+            setMimutes(0);
+        }
+        const onChange = (event) => {
+            setMimutes(event.target.value);
+        }
+        const onFlip = () => {
+            reset();
+            setFlipped(current => !current);
+        }
+        return (
+            <div>
+                <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input 
+                        value={flipped ? minutes*60 : minutes}
+                        id="minutes" 
+                        placeholder="Minutes" 
+                        type="number" 
+                        onChange={onChange}
+                        disabled={flipped}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="hours">Hours</label>
+                    <input 
+                        value={flipped ? minutes : minutes/60}
+                        id="hours" 
+                        placeholder="Hours" 
+                        type="number" 
+                        disabled={!flipped}
+                        onChange={onChange}
+                    />
+                </div>
+                <button onClick={reset}>Reset</button>
+                <button onClick={onFlip}>{flipped ? "Turn back" : "Invert"}</button>
+            </div>
+        );
+    }
+    function KmToMiles() {
+        const [length, setLength] = React.useState(0);
+        const [select, setSelect] = React.useState(true);
+        const onChange = (event)=>{
+            setLength(event.target.value);
+        }
+        const onReset = ()=>{
+            setLength(0);
+        }
+        const onSelect = ()=>{
+            setSelect(!select);
+            onReset();
+        }
+        return(
+            <div>
+                <div>
+                    <h2>KM 2 Miles</h2>
+                    km    
+                    <input
+                        id="Km"
+                        value={select === true ? length : length/0.621371}
+                        onChange={onChange}
+                        disabled={!select}
+                    />
+                </div>
+                <div>
+                    mile
+                    <input
+                        id="Mile"
+                        value={select === true ? length*0.621371 : length}
+                        onChange={onChange}
+                        disabled={select}
+                    />
+                </div>
+                <button onClick={onReset}>Reset</button>
+                <button onClick={onSelect}>{select === true ? "Invert" : "Turn back"}</button>
+            </div>
+            
+        );
+    }
+    function App() {
+        const [index, setIndex] = React.useState("1");
+        const onSelect = (event)=>{
+            setIndex(event.target.value);
+        };
+        return (
+            <div>
+                <h1>Super Converter</h1>
+                <select
+                    value={index}
+                    onChange={onSelect}
+                >
+                    <option value="0">Minutes & Hours</option>
+                    <option value="1">Km & Miles</option>
+                </select>
+                <hr/>
+                {index === "0" ? <MinutesToHours/> : null}
+                {index === "1" ? <KmToMiles/> : null}
+            </div>
+        )
+    }
+    ReactDOM.render(<App/>, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+위처럼 이전에 MinutesToHours 컴포넌트의 로직을 이용해 KmToMiles 컴포넌트를 만들었고 
+이 2개의 컴포넌트를 렌더링하는 부모컴포넌트인 App 컴포넌트를 만들었다. 
+
+자 이제 Props에 대해 배울것이다. 
+Props는 일종의 방식이다. 
+부모 컴포넌트로부터 자식 컴포넌트에 데이터를 보낼 수 있게 해주는 방법이다. 
+
+위의 예시는 별로 부모,자식 컴포넌트끼리 상관이 없어보이니 
+부모 컴포넌트로부터 자식 컴포넌트로 데이터를 보내기 위한 새로운 예시를 또 만들어 볼것이다. 
+
+아래처럼 똑같은 스타일의 버튼인데 그안의 텍스트만 다른 컴포넌트를 두개 만들었다.
+
+{이미지18삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function SaveBtn(){
+        return (
+            <button
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                Save Button
+            </button>
+        )
+    }
+    function ConfirmBtn(){
+        return (
+            <button
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                Comfirm Button
+            </button>
+        )
+    }
+    function App(){
+        return(
+            <div>
+                <SaveBtn/>
+                <ConfirmBtn/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+무엇을 하고싶나? 
+앞으로 100개의 버튼을 만들어야하고 저 style을 계속해서 재사용해야 하면서 텍스트만 바뀌도록 해야한다면 
+그리고 나중에 스타일은 똑같이 유지되게 변경을 해야한다면,
+스타일은 그대로 유지가되는데 텍스트만 따로 입력해줘서 설정이 가능한 하나의 컴포넌트를 만들고 싶지 않은가? 
+그렇다면 재사용성과 추후 유지/보수에 있어서 훨씬 뛰어날것이라고 생각하지 않는가? 
+
+이렇듯 이번시간에는 이 컴포넌트들을 좀 더 설정 가능하게끔 만드는것을 목표로 공부해볼것이다. 
+
+일단 <Btn/> 이라는 하나의 컴포넌트로 만든 뒤
+
+function App(){
+    return(
+        <div>
+            <Btn happy="Save Changes"/>
+            <Btn happy="Continue"/>
+        </div>
+    )
+}
+
+위처럼 부모컴포넌트 App()애서 "happy" 라는 Prop에 문자열을 담아주면 
+자식 컴포넌트의 함수가 인자로 받을 수 있다. 
+리액트가 넣어주는거다. 
+
+아래처럼 props라는 인자로(이름은 내맘대로 지어도 됨) 부모컴포넌트로부터 전달 받는 프로퍼티인것이다. 
+그래서 어떤 prop이든 내가 Btn 컴포넌트에 넣어서 보내면 그것들은 Btn 함수의 첫 번쨰 argument(인자) 속으로 들어갈것이다. 
+
+따라서 아래처럼 내가 보내준 props를 console.log(props); 해보면 
+<Btn/>을 통해 보내준 banana들을 볼 수 있다. 
+(두개가 콘솔창에 뜬건 당연히 Btn 2개 렌더링하고있으니까)
+
+{이미지19 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn(props){
+        console.log(props);
+        return (
+            <button
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                Save Button
+            </button>
+        )
+    }
+    function App(){
+        return(
+            <div>
+                <Btn happy="Save Changes"/>
+                <Btn happy="Continue"/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+그러므로, 여기서 내가 하고있는 것은, Btn 이라는 이름의 function을 부르고 있는 것뿐이고,
+그리고 정보를 이 Btn함수에 전송하고 있는 것이다. 
+
+그리고 React.js가 
+<Btn happy="Save Changes"/> 
+이 부분에서 실제로 하는 작업은 Btn() 이렇게 함수를 호출해서 
+내가 넣어준 모든것들(happy등등 뭐 내가 넣을 속성들)을 첫 번쨰 인자로서 넣어준것이다. 
+
+Btn({happy:"Save Changes"}) 뭐 이런식인거지. 
+
+정리하자면 ReactJS는 자동으로 내가 <Btn/>에 넣은 모든 property(prop) 들을 모두 오브젝트화하여 Btn 함수의 첫번째 인자로 전달한것이다. 
+(두번쨰 인자는 없다.)
+
+자 그렇다면 "props.happy" 를 통해서 컴포넌트안의 텍스트 값을 아래처럼 변경할 수 있겠다. 
+
+{이미지20 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn(props){
+        console.log(props);
+        return (
+            <button
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {props.happy}
+            </button>
+        )
+    }
+    function App(){
+        return(
+            <div>
+                <Btn happy="Save Changes"/>
+                <Btn happy="Continue"/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+보다시피 여기서 같은 Btn 컴포넌트를 사용하지만, 
+이 버튼들은 App 컴포넌트에 의해 설정되고 있다. 
+
+단 하나의 Btn 컴포넌트가 있지만 보이다시피 UI는 다르다. 
+그야말로 재사용 가능하게 만들고 있는것이다. 
+
+아래처럼 코드를 갼략화 할 수 있다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ happy, big }){
+        return (
+            <button
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {happy}
+            </button>
+        )
+    }
+    function App(){
+        return(
+            <div>
+                <Btn happy="Save Changes" big={true}/>
+                <Btn happy="Continue"/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+
+
+
+
+# Memo 
+
+props에 뭘 또 넣을 수 있는지 보쟈. 
+이전의 예제에서 봤다시피 true, false, string 등등 뭐 이것저것 다 보냇는데 
+내가 원한다면 function도 보낼 수 있다. 
+
+지금부터 무엇을 해볼거냐면 Btn 컴포넌트에 onClick function을 달아주고 
+이 onClick function은 내 App 컴포넌트에 있는 뭔가의 state를 바꾸게 될 것이다. 
+
+내가 만든 컴포넌트 <Btn/> 에 넣은 onClick은 이벤트리스너가 아니다. 
+실제 HTML 요소인 button에 "onClick" 을 넣으면 이벤트리스너지만 
+내가 만든 컴포넌트 <Btn/> 에 넣는다면 이건 단지 하나의 prop 이다. 
+
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ text, onClick }){
+        return (
+            <button
+                onClick={onClick}
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {text}
+            </button>
+        )
+    }
+    function App(){
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes")
+        return(
+            <div>
+                <Btn text={value} onClick={changeValue}/>   <- 그저 하나의 prop일뿐인 onClick
+                <Btn text={value}/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+그러니 헷갈리지 않게 하기 위해 "onClick" 이라는 prop의 이름을 "changeValue" 로 바꾸고 
+그렇다면 <Btn/> 안의 <button> 태그는 changeValue 라는 onClick 리스너를 가지게 된다. 
+
+또한 이 이벤트리스너는 잘 동작하여 왼쪽버튼을 클릭하면 버튼안의 텍스트가 
+"save Change" -> "Revert Change"
+로 잘 바뀌는것을 볼 수 있다. 
+
+{이미지21 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ text, changeValue }){
+        return (
+            <button
+                onClick={changeValue}
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {text}
+            </button>
+        )
+    }
+    function App(){
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes")
+        return(
+            <div>
+                <Btn text={value} changeValue={changeValue}/>
+                <Btn text={value}/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+자 이번 예시를 통해서 부모컴포넌트가 자식컴포넌트에게 text, boolean 타입말고도 함수도 보낼 수 있다는것을 확인하였다. 
+
+자 그렇다면 아래와 같이 App 컴포넌트안에 두개의 Btn 컴포넌트를 만든 뒤 
+하나의 Btn 컴포넌트의 값만 바뀌도록 코드를 작성한다면 바뀌는 Btn 만 리렌더링 될까? 
+
+아니다. 
+두개의 Btn 모두 리렌더링 되는것을 콘솔창의 텍스트를 통해 확인할 수 있다. 
+
+{이미지22 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ text, changeValue }){
+        console.log(text + "was rendered");
+        return (
+            <button
+                onClick={changeValue}
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {text}
+            </button>
+        )
+    }
+    function App(){
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes")
+        return(
+            <div>
+                <Btn text={value} changeValue={changeValue}/>
+                <Btn text="Continue"/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
 
