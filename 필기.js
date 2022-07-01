@@ -3136,4 +3136,234 @@ props에 뭘 또 넣을 수 있는지 보쟈.
 </html>
 *************************************************************************************************************************************
 
+왜냐하면 부모컴포넌트는 state의 변경을 겪는다. 그리고 이 state가 변경될 때 
+그 부모 컴포넌트의 안에있는 모든 자식컴포넌트들 또한 같이 새로 그려지기 때문이다. 
+
+아니 그렇다면 Btn Continue는 어떤 부분이 다시 그리는걸까? 
+아니 왜 다시 그리는걸까?
+뭐 딱히 바뀌는게 없는데도 말이다. 굳이 손해인데도? 
+
+그래서 우리가 뭘 할 수 있냐면, 바로 React Memo 라고 불리는 걸 할 수 있다. 
+(Memorize, 기억한다는 의미)
+
+이것을 통해는 우리는 만약 prop이 변경되지 않는다면 이 컴포넌트가 다시 그려지는 것을 원치 않는다고 지시할 수 있다. 
+
+사용방법은 아래처럼 React.memo(내가만든컴포넌트이름)
+ -> const MemorizedBtn = React.memo(Btn) 
+
+로 생성해줄 수 있고 MemorizedBtn 은 바로 memorized version의 Btn이 될 거다. 
+
+그리고 아래처럼 부모컴포넌트(App) 안에서 이 MemorizedBtn 을 사용해주면 
+변경되는 Btn만 리렌더링 되는것을 볼 수 있다. 
+
+{이미지23 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ text, changeValue }){
+        console.log(text + "was rendered");
+        return (
+            <button
+                onClick={changeValue}
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {text}
+            </button>
+        )
+    }
+    const MemorizedBtn = React.memo(Btn);
+    function App(){
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes")
+        return(
+            <div>
+                <MemorizedBtn text={value} changeValue={changeValue}/>
+                <MemorizedBtn text="Continue"/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+
+
+
+# Prop Types 
+
+Props Types에 대해서 공부해볼 것이다. 
+왜냐하면 컴포넌트를 다룰 때 우리가 알아야만 하는 놈들 중 마지막 놈이기 때문이다. 
+
+prop은 원하는 어떤 형태의 데이터든지 보낼 수 있게 해준다. 
+(텍스트든 함수든 불린이든 뭐든 하여간 그냥 다.)
+
+문제는 내가 컴포넌트들을 가지고 있는데, 그것들이 매우 많은 props를 가질 떄 생긴다. 
+
+때때로 내가 혹은 나의 팀원이 잘못된 prop을 전달한다던지하는 실수를 저지를 지도 모른다. 
+예를들어 아래의 Btn 컴포넌트의 text prop에는 텍스트형식만 넣어줘야하는데 숫자를 넣어준다던지 말이다. 
+
+*************************************************************************************************************************************
+function Btn({ text, changeValue }){
+    console.log(text + "was rendered");
+    return (
+        <button
+            onClick={changeValue}
+            text="텍스트만들어가야함"
+            style={{
+                backgroundColor:"tomato",
+                color:"white",
+                padding:"10px 20px",
+                border:0,
+                borderRadius:10,
+            }}
+        >
+            {text}
+        </button>
+    )
+}
+*************************************************************************************************************************************
+
+이러한 실수를 방지하기 위해 우리의 똑똑하신 React팀의 개발자들은 
+PropType 이라는것을 만들었고 이것은 내가 어떤 타입의 prop을 받고 있는지를 체크해준다. 
+
+일단 가져오기 위해 
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script> 
+를 통해 가져오고 
+
+가져온 뒤 ReactJS에게 나의 prop들의 타입이 무엇인지를 알려줄 것이다. 
+왜냐면 아직 ReactJS는 prop들의 타입이 무엇인지 모르니까. 
+
+하지만 내가 PropTypes를 설치함으로써 
+아래와 같은 형식으로 컴포넌트의 prop들의 타입을 설정해주는것이 가능하다. 
+
+Btn.PropTypes = {
+    text: PropTypes.string,
+    fontSize: PropTypes.number,
+};
+
+위처럼 컴포넌트의 타입을 설정해준다면 
+애플리케이션을 실행시켰을 때 아래의 이미지처럼 에러근 아니고 경고가 콘솔창에 뜨는것을 볼 수 있다. 
+
+{이미지24 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ text, changeValue }){
+        console.log(text + "was rendered");
+        return (
+            <button
+                onClick={changeValue}
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                }}
+            >
+                {text}
+            </button>
+        )
+    }           
+    const MemorizedBtn = React.memo(Btn);
+    Btn.propTypes = {
+        text: PropTypes.string,                   <- text에는 문자를 받도록 설정
+    }
+    function App(){
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes")
+        return(
+            <div>
+                <Btn text={13} changeValue={changeValue}/>  <- text에 숫자줌
+                <Btn text="Continue"/>
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
+
+propTypes 는 다양한 방식으로 사용될 수 있다. 
+데이터타입이 뭔지를 정해줄수도 있고(함수인지, 텍스트인지, 숫자인지, 불린인지...) 
+특정 문자를 지정해줄수도있다.(텍스트인데 뭐 내가 지정한 텍스트들만 가능하게)
+또한 .isRequired 를 통해 필수로 prop을 설정해주게 할수도 있다.(Proptypes.text.isRequired)
+기타 뭐 설정해줄 수 있는 조건은 이것저것 많으니까 추후 필요에 따라 사용하면 된다. 
+
+또한 prop에 default값 즉, 별도의 할당해주는 값이 없을때 기본값을 가지게 할 수도 있다. 
+아래처럼 컴포넌트함수에서 값을 미리 지정해주면 된다. 
+
+{이미지25 삽입}
+*************************************************************************************************************************************
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    function Btn({ text, fontSize = 14 }){      <- fontSize 기본값 여기서 설정해줌.
+        console.log(text + "was rendered");
+        return (
+            <button
+                style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border:0,
+                    borderRadius:10,
+                    fontSize: fontSize,
+                }}
+            >
+                {text}
+            </button>
+        )
+    }
+    const MemorizedBtn = React.memo(Btn);
+    Btn.propTypes = {
+        text: PropTypes.string.isRequired,
+        fontSize: PropTypes.number,
+    }
+    function App(){
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue("Revert Changes")
+        return(
+            <div>
+                <Btn text={value} fontSize={18}/>   <- fontSize값 별도지정
+                <Btn text={"Continue"}/>    <- fontSize값 별도지정 없으니 기본값 들어감
+            </div>
+        )
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+</script>
+</html>
+*************************************************************************************************************************************
 
