@@ -3367,3 +3367,473 @@ propTypes 는 다양한 방식으로 사용될 수 있다.
 </html>
 *************************************************************************************************************************************
 
+
+
+
+# Create React App (1)
+
+create-react-app은 리액트 어플리케이션을 만드는 가장 좋은 방식이다. 
+지금까지 만든 리액트 어플리케이션은 아래코드같은 스크립트를 import 함으로써 만들어졌다.
+
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script> 
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script> 
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+하지만 create-react-app 을 사용한다면, ReactJS 어플리케이션을 만듦에 있어 훨씬 쉬워질 것이다. 
+왜냐하면 create-react-app 은 엄청 많은 스크립트들과 많은 사전설정들을 나를 위해서 준비해주기 때문이다. 
+
+예를들면, create-react-app 을 사용해서 어플리케이션을 만들면 개발서버에 접근한다든가, 
+자동으로 새로고침을 시켜준다든가, 즉각적으로 어플리케이션 안에 CSS를 포함시켜 준다든가 하는 기능들이 있다. 
+
+그리고, 내가 웹사이트를 publish 할 준비가 되면 create-react-app 은 publish 하는 명령어를 가지고 있다. 
+코드를 압축하고, 좀 더 빠르게 만들어주고 하여간 그냥 아주 좋은놈이다. 
+그래서 모두가 리액트 어플리케이션을 만들어야 할 때 create-react-app 을 사용한다. 
+
+create-react-app 사용방법 
+1. npx create-react-app 프로젝트이름 
+{이미지26 삽입}
+
+설치가 완료된 후 내가 만든 프로젝트안의 package.json을 확인해보면(package.json 안에서 모든 스크립트들을 찾아낼 수 있다.)
+scripts 안에 내가 실행할 수 있는 코드들이 있는것을 확인할 수 있다. 
+
+*************************************************************************************************************************************
+{
+    "name": "my-first-react-app",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@testing-library/jest-dom": "^5.16.4",
+      "@testing-library/react": "^13.3.0",
+      "@testing-library/user-event": "^13.5.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-scripts": "5.0.1",
+      "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    }
+}
+*************************************************************************************************************************************
+
+이중 start를 실행해보면 
+$ npm run start 
+
+developement server(개발용 서버)를 만들게 된다. 
+그리고 자동으로 브라우저가 열리면서 아래 이미지 27과 같은 아주 멋진 페이지를 얻게 된다. 
+{이미지27 삽입}
+
+이게 바로 내가 create-react-app 을 사용해서 어플리케이션을 만들었을 때 초기 버전이다. 
+
+그 다음 이제 src 폴더를 볼 수 있는데, 
+{이미지28 삽입}
+src 폴더는 내 모든 파일들을 넣을 폴더다. 
+
+모든것이 다 src 폴더안에 있어야 한다. 
+src 폴더는 많은파일들을 가지고 있지만, 무엇보다 중요한 건 바로 index.js 파일이다. 
+
+*************************************************************************************************************************************
+(index.js)
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+*************************************************************************************************************************************
+
+index.js 파일에서 익숙한 것들을 볼 수 있는데, 
+ReactDOM 도 있고, document.getElementById 도 보인다. 
+
+create-react-app은 나의 어플리케이션을 가지고 public 폴더안의 index.html에 넣어주도록 설정되어 있다. 
+
+*************************************************************************************************************************************
+(index.html)
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <<body></body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+*************************************************************************************************************************************
+
+index.html안에는 id가 "root" 인 div태그가 있고 index.js에서 root 안에 내가 만든것들을 넣어주도록 설정되어있다. 
+즉, 내가 손수 할 필요 없다. 이제는 이미 설정이 되어있는 것이다. 
+
+src폴더 안에 있는 내 코드를 가져다가 이 페이지의 어딘가로 넣어줄 거란 말이다. 
+
+또한 create-react-app 의 가장 큰 장점 중 하나는 코드를 수정하면 어플리케이션을 다시 실행할 필요 없이 
+자동으로 브라우저에 업데이트 해준다는 점 이다. 
+이것또한 아주 편리하다. 
+
+이외에 뭐 특별한 건 없다. 
+이제 나는 몇몇 설정을 지워줄것이다. 바닥부터 새로 시작하고 싶으니까. 
+
+CSS 설정 지워주고, 감당할 수 없는 테스팅 뭐 이런거 다 지워주고 아주 심플하게 만들어줄것이다. 
+
+*************************************************************************************************************************************
+(맨처음 index.js)
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+
+(지운 버전)
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+*************************************************************************************************************************************
+
+또한 App.js 도 필요없는것들 다 지워주고 아주 씸플하게 만들어 줄 것이다. 
+
+*************************************************************************************************************************************
+(기존 App.js)
+function App() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+        </header>
+      </div>
+    );
+  }
+  
+  export default App;
+  
+(씸플 App.js)
+function App() {
+    return (
+      <div>
+        <h1>Welcome!!</h1>
+      </div>
+    );
+  }
+  
+export default App;
+*************************************************************************************************************************************
+
+App()은 단지 컴포넌트다. 하지만 내가 nodejs로 작업하고 있기 때문에 
+파일들을 각각 분리시키는게 가능하고, 좀 더 조직적으로 구성할 수 있게 된 것이다. 
+
+현재 한 파일당 한 컴포넌트를 가지고있고, index.js에서 그 컴포넌트들을 import 시키고 있다. 
+추후 다른 컴포넌트들도 하나의 파일로 이루어지도록 구성할 것이다. 
+
+기타 필요없는 파일들도 다 지워주면 된다. 
+App.test.js, App.css, index.css, logo.svg, reportWebVitals.js, setupTests.js ... 
+
+App.js와 index.js 만 남겨주면 된다. 
+이제 아주 깔끔한 create-react-app 의 설치판을 얻게되었다. 
+
+이제 나의 리액트 어플리케이션을 렌더링해줄 뿐인 index.js랑 Welcome!! 띄워주는 App.js 밖에 없다. 
+{이미지29 삽입}
+
+
+
+
+# Create React App (2)
+
+{이미지30}
+*************************************************************************************************************************************
+(index.js)
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+(App.js)
+import Button from "./Button";
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome!!</h1>
+      <Button text={"Continue"} />
+    </div>
+  );
+}
+
+export default App;
+
+(Button.js)
+function Button({text}) {
+    return(
+        <button>{text}</button>
+    );
+}
+
+export default Button;
+*************************************************************************************************************************************
+
+
+위와같이 Welcome 텍스트와 버튼을 브라우저에 출력해준 후 
+propType 을 설정해주려 하는데 그러기 위해서는 npm을 통해 다운로드($npm i prop-types) 후 js파일에 import 해주면 된다. 
+아주 간단하게 사용할 수 있다. 
+(기존에는 script를 url을통해서 import 하였으나 이제 module을 사용)
+
+*************************************************************************************************************************************
+(Button.js)
+
+import Proptypes from "prop-types"
+
+function Button({text}) {
+    return(
+        <button>{text}</button>
+    );
+}
+
+Button.Proptypes = {
+    text: Proptypes.string.isRequired,
+}
+
+export default Button;
+*************************************************************************************************************************************
+
+기존 create-react-app 을 사용하기 전과 동일한 코드를 사용한다. 
+또한 props를 받아내는 방법도 똑같다. 
+
+하지만 create-react-app 을 사용함으로서 서로 다른 파일들을 코드로 분할하는 등의 
+작업을 할 수 있게 되었다. 
+
+또한 좋은 기능중의 하나는 특정 컴포넌트를 위한 CSS파일을 만들 수 있다는 점 이다. 
+
+자 일단 아래처럼 CSS파일을 만든 뒤 index.js에 CSS 파일을 import 해주면 
+모든 button 태그는 토마토색을 가지게 된다. 
+
+*************************************************************************************************************************************
+(styles.css)
+
+button {
+    background-color: tomato;
+    color: white;
+}
+
+(index.js)
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import "./styles.css";
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+*************************************************************************************************************************************
+
+create-react-app 으로 작업할 때의 포인트는 "분할하고" "정복하는" 것이다. 
+그러기 위해서 있는 create-react-app 의 좋은 기능이 "CSS modules" 라는 것이다. 
+
+이것을 사용하기 위해서 styles.css 파일의 이름을 바꿔줘야한다. 
+styles.css -> Button.module.css 
+
+그리고 Button.module.css 내에서 btn 이라는 클래스를 만들어 볼 거다. 
+
+*************************************************************************************************************************************
+(Button.module.css)
+
+.btn {
+    background-color: tomato;
+    color: white;
+}
+*************************************************************************************************************************************
+
+그리고 나는 Button.module.css 를 index.js에 import 하지 않을 것이다. 
+대신에 이 CSS 파일을 Button.js에 import 시켜줄 것이다. 
+
+*************************************************************************************************************************************
+(Button.js)
+
+import Proptypes from "prop-types";
+import styles from "./Button.module.css"
+
+function Button({text}) {
+    return(
+        <button className={styles.btn}>{text}</button>
+    );
+}
+
+Button.propTypes = {
+    text: Proptypes.string.isRequired,
+}
+
+export default Button;
+*************************************************************************************************************************************
+
+자 나는 Button.module.css 파일에 CSS 코드를 작성하였다. 
+하지만 create-react-app은 이 CSS 코드를 javascript 오브젝트로 변환시켜준다. 
+그리고 이 javascript 오브젝트는 btn을 안에 가지고 있는 것이다. 
+
+{이미지31 삽입}
+그리고 위의 이미지에서 브라우저의 Elements 에서 볼수있다시피 
+create-react-app은 무작위적인 랜덤 class를 갖는다는 걸 알 수 있다. 
+
+즉, 무작위적인 class이름을 붙여줌으로서 특정 컴포넌트에만 스타일을 적용시켜줄 수 있고 
+또한 동일한 class이름을, .btn을, 다른 파일 내에서도 사용할 수 있다. 
+
+즉, 나의 style들도 modular가 될 수 있다는 것이다. 
+
+어플리케이션을 위한 다른 CSS module을 만들어 볼 건데, 
+어플리케이션을 위한 거니까 App.mudule.css 라고 이름을 지어줄 것이다. 
+(이름은 중요하지 않다. 아무거나.module.css 형식만 유지해주면 된다.)
+
+title을 꾸며주기 위한것이니 .title 이라는 클래스명으로 명시해주고 아래처럼 스타일을 입혀준다. 
+
+*************************************************************************************************************************************
+(App.module.css)
+
+.title {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 18;
+    color: red;
+}
+*************************************************************************************************************************************
+
+이제 이 스타일을 App.js에서 h1 태그에 import 해준 뒤 
+styles 오브젝트의 title을 가져와서 h1에 넣어주면 된다. 
+
+*************************************************************************************************************************************
+import Button from "./Button";
+import styles from "./App.module.css";       <- CSS파일 가져와서 styles에 받아주고 
+
+function App() {
+  return (
+    <div>
+      <h1 className={styles.title}>Welcome!!</h1> <- styles 오브젝트의 title을 클래스이름으로 지정해주면 된다. 
+      <Button text={"Continue"} />
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+지금은 이게 뭐가 좋은거지 싶지만 
+이 방법이 훨씬 좋은 방법이다. 
+
+내내 다른 클래스 이름들을 사용하기 위해 기억하고 있어야 했었지만 
+이제는 다른 클래스 이름들을 기억할 필요가 없다. 
+
+왜냐하면 create-react-app 이 그것들을 다 랜덤하게 바꿔줄 것이기 때문이다. 
+
+결론적으로 이제 나는 컴포넌트를 분리해서 만들 수 있고, 
+그 컴포넌트를 위한 CSS를 만들 수 있고, 
+
+그 컴포넌트들과 CSS들은 독립적인 형태가 될것이다. 
+
+
+# Effects Introduction 
+
