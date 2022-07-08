@@ -3837,3 +3837,444 @@ export default App;
 
 # Effects Introduction 
 
+{이미지32 삽입}
+*************************************************************************************************************************************
+(App.js)
+
+import styles from "./App.module.css";
+import { useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const onClick = () => setValue((prev) => prev + 1);
+  console.log("render");
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click Me</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+위의 코드는 아주 익숙하다. 
+그냥 버튼 클릭하면 숫자 올려주는 코드다. 
+
+위의 코드에서 하는것은 state를 사용하는것 뿐이다. 
+value를 받아오고, value를 수정하기위해 function을 받아오고. 
+이전 state를 받아다가 +1 값을 return 하는 function을 만들었고, 
+그 값을 h1 태그를 통해 보여주었다. 
+그리고 내가 state를 modify 할 수 있도록 하는 버튼이 있다. 
+
+또한 버튼을 클릭할 때 마다 콘솔창에는 "render" 텍스트가 계속 출련된다. 
+컴포넌트의 state가 변화하고, 그럴 때 마다 이 모든 App 컴포넌트가 다시 실행되는것이다.
+(console.log("render") 도 같이 계속 재실행 되는거다.) 
+아주 익숙한 현상이다. 
+
+하지만 이제, 내가 해결해야하는 문제가 하나 있다. 
+가끔은, 계속 다시 렌더링 될 때 마다 반복실행되어도 괜찮은 코드가 있을 수 있다. 
+하지만 가끔은 그렇게 하지 않고, 컴포넌트가 처음 렌더링 될 때만 코드가 실행되길 원할 수도 있다. 
+
+즉, 현재는 state가 변할 때마다 매번 console.log("render"); 가 실행되고 있지만 
+첫 렌더링 할때만 코드가 실행되고, 다른 state 변화에는 실행되지 않도록 하고자 하는것이다. 
+
+자 이제 어떻게 특정 코드들이 첫번째 컴포넌트 렌더링할때만 실행되게 아는지 알아보자. 
+
+
+# useEffect 
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const onClick = () => setValue((prev) => prev + 1);
+  console.log("render");
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click Me</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+console.log("render");
+를 첫 렌더링할때만 실행되고 이후 state 가 변경될때는 실행되지 않도록 코드를 수정해볼것이다. 
+
+당연히 리액트개발팀은 이러한 기능을 미리 만들어 놓았고 그것은 바로 "useEffect" 이다. 
+
+useEffect 는 두개의 인자를 가지는 function이다. 
+첫번째 인자는 내가 딱 한번만 실행하고 싶은 코드가 될것이다.(함수만 받을수 있음.)
+두번째는.. 조금이따 다시 알아볼것이다. 
+
+useEffect(처음한번실행할코드, [아직모르는 미지의 무언가]);
+    -> 이렇게 쓴다. 
+
+일단 state가 바뀔때마다 코드가 실행되는 문제를 해결해보고 그 다음에, 또 어떤 문제가 발생하는지 보고, 
+그때 이 두번째 인자에 대해 얘기해보자. 
+
+
+{이미지33}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const onClick = () => setValue((prev) => prev + 1);
+  useEffect(()=>{console.log("render");}, [])
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click Me</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+자 위처럼 useEffect 함수를 사용한 뒤 그 첫번째 인자로 실행시켜야할 코드를 주게 되면
+컴포넌트를 처음 렌더링할 때만 코드를 실행시키고 
+이 후 state 가 변경될 때는 코드가 실행되지 않는것을 볼 수 있다. 
+
+자 이제 나는 reactJS가 나에게 언제 코드를 실행할지 안할지 결정할 tool을 제공한다는 걸 안다. 
+
+
+# Deps 
+
+{이미지34 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const onClick = () => setValue((prev) => prev + 1);
+  const onChange = (event) => setKeyword(event.target.value);
+  console.log("i run all the time");
+  useEffect(()=>{console.log("Call the API");}, [])
+  console.log("SEARCH FOR", keyword);
+  return (
+    <div>
+      <input
+        value={keyword}
+        onChange={onChange}
+        type="text"
+        placeholder="Search here.."
+      />
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click Me</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+이전에 해봤던대로 input을 만들고 event listener를 연결했고 
+이 function이 작동할 때 argument로 event를 받았다. 
+
+그리고 event를 발생시킨 input에서 value를 받아서, 그 value를 setKeyword함수를 사용하여 
+keyword state에 넣어줬다. 
+그리고 그 keyword를 가져와서, input의 value로 사용하면 내가 원할 때 이 input을 조작할 수 있게된다. 
+
+그렇게 되면 내가 타이핑할 때 마다 state를 수정하고 있다. 
+
+이번에 내가 하려는것은 검색이다. 
+내가 이 검색창에 무언가를 썻을 때, 검색 API를 이용하는것이다. 
+그런데, 저 Click me 버튼을 눌럿을 때 마저 검색 API를 호출하고싶지는 않다. 
+
+즉, 나는 search keyword에 변화가 있을 때 만 검색 API를 호출하고 싶은것이다. 
+(counter가 변화할 때에도 검색 API를 호출하고 싶지는 않다.
+지금 보면 Click Me 버튼을 클릭해고 SEARCH FOR marvel 이 계속 뜬다.)
+
+이제 나는 내 코드의 특정한 부분만이 변화했을 때, 
+원하는 코드들을 실행할 수 있는 방법을 배우고 싶다. 
+
+여기에서 useEffect의 마법을 배울거다. 
+
+useEffect(()=>{
+    console.log("SEARCH FOR", keyword);
+},[keyword]);
+
+자..이렇게 쓰면된다. 
+이렇게 써주면, 이 'keyword' 가 변화할 때 첫번쨰인자의 함수를 실행할 거라고 react.js에게 알려주는것이다. 
+그러면 counter가 변한다고, 즉 버튼 눌럿다고 console.log("SEARCH FOR", keyword); 이게 실행되진 않겠지. 
+(console.log("SEARCH FOR", keyword) 이걸 검색 API를 호출하는 코드라고 생각하자)
+
+그리고 이것이 저 useEffect()의 두번째 인자를 빈 배열로 주게되면 처음에 한번만 실행하는지를 설명해준다. 
+뭐 아무것도 지켜보는게 없으니 한번만 실행되고 마는것이다. 
+따라서 아래처럼 코드를 작성해주면 counter state가 변할때는 검색 API를 호출하지 않고 
+오로지 keyword state가 변할때만 검색 API를 호출한다.
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const onClick = () => setValue((prev) => prev + 1);
+  const onChange = (event) => setKeyword(event.target.value);
+  console.log("i run all the time");
+  useEffect(()=>{console.log("Call the API");}, [])
+  useEffect(()=>{
+    console.log("SEARCH FOR", keyword);
+  },[keyword]);                         <- keyword state가 변할때만 검색 API 호출
+
+  return (
+    <div>
+      <input
+        value={keyword}
+        onChange={onChange}
+        type="text"
+        placeholder="Search here.."
+      />
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click Me</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+하지만 나의 서치바는 아직 하나의 문제점을 가지고 있다. 고것은 바로 처음 렌더링할 때 
+서치바에 아무값도 없을때에도 검색 API를 호출한다는 점이다. 
+
+그부분은 useEffect() 함수안에 조건문을 써줌으로서 해결할 수 있다. 
+글자가 5개 이상인경우에만 검색 API를 호출하는것으로 조건을 추가해보자. 
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [counter, setValue] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const onClick = () => setValue((prev) => prev + 1);
+  const onChange = (event) => setKeyword(event.target.value);
+  console.log("i run all the time");
+  useEffect(()=>{console.log("Call the API");}, [])
+  useEffect(()=>{
+    if(keyword.length > 5) {                <- keyword 길이 조건 추가
+      console.log("SEARCH FOR", keyword);
+    }
+  },[keyword]);
+
+  return (
+    <div>
+      <input
+        value={keyword}
+        onChange={onChange}
+        type="text"
+        placeholder="Search here.."
+      />
+      <h1>{counter}</h1>
+      <button onClick={onClick}>Click Me</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+이제는 언제 코드가 실행될지 결정하는 방법을 배웠다. 
+예를 들면 컴포넌트가 생성되는 첫 시작점이라던가, 아니면 무언가가 update 될 떄도 코드를 실행할 수 있다. 
+그리고 특정한 state가 update 될 때만 코드를 실행할 수도 있다. 
+
+또한 
+useEffect(함수, [keyword, counter])
+와 같은 방식으로 두번쨰 인자에 두개의 state 를 넣어주면 둘중에 하나만 변해도 함수를 실행시키도록 할 수 있다. 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+reactJS에서 가장 멋진 점은, 바로 컴포넌트를 refresh(새로고침) 한다는 점이다. 
+새로운 데이터가 들어올 때 마다 UI를 refresh 한다. 
+그래서 내가 직접 refresh 하지 않아도 되나까 아주아주 좋당. 
+
+그리고 또 한가지, reactJS는 변화가 일어날 때만 refresh 한다는 것이다. 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+# Cleanup 
+
+Cleanup function_이라는걸 배워봅시다. 
+
+{이미지35-1,2 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function Hello(){
+  useEffect(()=>{
+    console.log("I'm here");
+  }, []);
+  return <h1>Hello!</h1> 
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
+
+  return (
+    <div>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+위의 코드는 showing이라는 state의 변경을 통해 
+Hello 컴포넌트를 보였다 숨겼다하는 어플리케이션이며 
+Hello 컴포넌트안에서 useEffect를 통하여 처음 컴포넌트를 실행할 때 에만 "I'm here" 을 콘솔창에 출력하도록 기능한다. 
+
+즉, console.log("I'm here"); 은 Hello 컴포넌트가 생성(Create)될때만 실행되는것이다. 
+
+그런데 여기서 또 하나 배우고자 하는것은, reactJS가 할 수 있는 건데 
+컴포넌트가 제거(destroy) 될 때도 코드를 실행할 수 있는것이다. 
+
+{이미지36-1,2 삽입}
+위의 브라우저상 Element 에서 보다시피 코드안에 아예 남아 있지 않고, 스크린에서도 없어진다. 
+숨기는게 아니라 아예 태그를(컴포넌트를) 없애버리는것이다. 
+
+정리하자면 create할 떄 useEffect 를 통해 function을 작동시키듯이, 
+destroy 할 때도 function을 작동시켜보고 싶은것이다. 
+
+사용방법은 아주 간단하다. 
+dependency 가 없는 useEffect의 첫번쨰인자 함수의 return 값에 함수가 바로 destory될 때 작동되는 함수인것이다. 
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function Hello(){
+  useEffect(()=>{
+    console.log("Created :)")
+    return () => console.log("Destroyed :(")    <- 컴포넌트가 destroyed 될 때 작동
+  }, []);
+
+  return <h1>Hello!</h1> 
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
+
+  return (
+    <div>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+위의 방식을 통해 컴포넌트가 언제 create 되고, destory 되는지 알 수 있게 된다. 
+
+이게 뭐 어떻게 돌아가는지 잘 이해가 안될수있지만, 잘게 쪼개서 생각해 보면 그렇게 어려운것도 아니다. 
+위의코드와 아래의 코드는 똑같은 코드이다.
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function Hello(){
+
+  function Byfn(){
+    console.log("By :(");
+  }
+
+  function Hifn(){
+    console.log("Hi :)");
+    return Byfn;    <- Byfn(); 이렇게하면 안됌.
+  }
+
+  useEffect(Hifn, []);
+
+  return <h1>Hello!</h1> 
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
+
+  return (
+    <div>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+자세히 다시 한번 보면, 
+useEffect는 function을 받고, 이 function은 dependency가 변화할 때 호출된다. 
+위의 경우 dependency가 비어있으니까 컴포넌트가 처음 생성될 때 function이 호출된 후에 다시는 호출되지 않는다. 
+
+이제. 컴포넌트가 파괴될 떄도 function을 실행하고싶으면, 나의 Hifn이 Byfn을 return 해야한다. 
+react.js 가 Hifn을 실행할 거고, 컴포넌트가 파괴될 때 react.js 는 Hifn이 return 한 function을(Byfn) 실행할거다. 
+
+이거다.. 
+useEffect 는 굉장히 유용하다. 
+useEffect 는 우리에게 언제 코드를 실행할지 선택권을 제공한다. 
+
+우리는 시작할 때만 코드를 실행하게 할 수 있다는 걸 배웠고, 무언가 변화할 때 코드가 실행되도록 할 수도 있고, 
+이번에는 컴포넌트가 파괴될 때 코드를 실행할 수 있다는 것도 배웠다. 
+
+그런데 사실 아직 대부분의 개발자들은 이러한 Cleanup function을 잘 사용하진 않는다. 
+보통은 useEffect 안에 모든것을 작성한다. 
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+(Version 1)
+function Hello(){
+  useEffect(function(){
+    console.log("Hi");
+    return function(){
+      console.log("Bye :(");
+    }
+  },[]);
+  return <h1>Hello!</h1> 
+}
+
+(Version 2)
+function Hello(){
+  useEffect(()=>{
+    console.log("Hi :)");
+    return () => console.log("Bye :(");
+  }, [])
+  return <h1>Hello!</h1> 
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
+
+  return (
+    <div>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
