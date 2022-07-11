@@ -3684,7 +3684,7 @@ propType 을 설정해주려 하는데 그러기 위해서는 npm을 통해 다�
 *************************************************************************************************************************************
 (Button.js)
 
-import Proptypes from "prop-types"
+import Proptypes, { array } from "prop-types"
 
 function Button({text}) {
     return(
@@ -4272,6 +4272,717 @@ function App() {
     <div>
       {showing ? <Hello /> : null}
       <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+
+# To Do List part One 
+
+뚜루리스트를 만들어 보자.
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const onChange = (event) => setToDo(event.target.value);
+
+  return (
+    <div>
+        <input 
+          type="text"
+          placeholder="write your to do.."
+          onChange={onChange}
+          value={toDo}
+        />
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+자 아주 기본적인 input박스를 가진 구성이다. 
+
+이 input박스를 form안에 두고 form안에 button을 추가해줌으로서 
+button을 클릭하면 input박스의 value가 submit이 된다는걸 난 알고있다. 
+
+그렇다면 이러한 방식으로 input박스에 입력한 나의 value를 submit함으로서 
+그 값들을 투두리스트에 추가해주는 방식으로 만들면 된다. 
+
+투두리스트는 배열의 형태로 만드는것으로 한다. 
+즉,input박스안의 값을 submit할 때 마다 투두리스트 배열에 그 값을 추가해주는것이다. 
+
+{이미지37 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();     <- 페이지 자동 리로드 방지
+    if(toDo === "") {
+      return;
+    }
+    setToDos(currentArray => [toDo, ...currentArray]);
+    setToDo("");                <- submit 후 input박스 비워줌.
+  }
+  console.log(toDos);
+  return (
+    <div>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input 
+          type="text"
+          placeholder="write your to do.."
+          onChange={onChange}
+          value={toDo}
+        />
+        <button>Add To Do</button>
+      </form>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+자 일단 위처럼 코드를 작성하면 input박스안에 할일을 입력하고, 
+버튼을 눌러 submit 이벤트를 발생시키면 toDos 라는 state(배열) 에 그 값들이 추가된다. 
+
+상세내용을 알아보자면
+위와같이 submit 이벤트가 발생했을 때 페이지가 리로드 되는것을 막기 위해 
+event.preventDefault() 를 사용하여주고, 
+input박스 안은 setToDo(""); 를 통해 submit 후 비워주었다. 
+
+중요한건
+setToDos(currentArray => [toDo, ...currentArray]);
+이부분이다. 
+
+만약 Vanila Javascript 였다면 
+toDos.push(toDo)
+이런식으로 toDos 배열에 값을 추가해줬겠지만 
+이것은 리액트고 또한 toDos는 일반 배열이 아닌 state다. 
+즉, setToDos 를 통해서만 값을 변경해줘야한다는 것이다. 
+
+그래서 사용한 방법이 바로 아래의 방법이다. 
+setToDos(currentArray => [toDo, ...currentArray]);
+이중 [toDo, ...currentArray]<- 이부분은 기존의 toDos 배열에 첫번째값으로 toDo라는 값을 추가해주는 문법이다. 
+
+이렇게 되면 기존 비어있는 배열(const [toDos, setToDos] = useState([]); 여기서 기본값을 비어있는 배열로 놨으니)에 
+내가 input박스에 값을 입력 후 submit 이벤트를 발생시킬때마다 값을 추가해줄수 있게 된다. 
+
+
+
+
+# To Do List part Two 
+
+내가 입력한 값으로 만든 배열을 이용하여 브라우저에 리스트들을 출력할것인데 
+그전에 
+array.map()
+이라는걸 먼저 알고 가자. 
+
+이전에 공부했던것이지만 한번 더 짚고 넘어가자면 
+map("함수") 안의 "함수" 를 통해 return 된 값이 새로운 배열로 만들어진다. 
+
+*************************************************************************************************************************************
+ex)
+const a = [1, 2, 3, 4, 5, 6];
+const b = a.map(() => ":)");
+
+console.log(b);
+
+(출력)
+[':)', ':)', ':)', ':)', ':)', ':)']
+*************************************************************************************************************************************
+
+위처럼 map은 하나의 배열에 있는 item을 내가 원하는 무엇이든지로 바꿔주는 역할을 하고 
+그건 결국 새로운 배열로 return 해준다. 
+
+그리고 map의 좋은 기능중 하나는 map("함수") 안의 "함수"의 첫번째 인자로 현재의 item을 가져올 수 있다는 것이다. 
+
+*************************************************************************************************************************************
+ex)
+const a = [1, 2, 3, 4, 5, 6];
+const b = a.map((item) => item + ":)");
+
+console.log(b);
+
+(출력)
+['1:)', '2:)', '3:)', '4:)', '5:)', '6:)']
+*************************************************************************************************************************************
+
+자 그렇다면 나는 이 map() 을 사용하여 컴포넌트를 return 시키고 싶은것이다. 
+아래의 코드를 좀 더 자세히 뜯어보자면
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if(toDo === "") {
+      return;
+    }
+    setToDos(currentArray => [toDo, ...currentArray]);
+    setToDo("");
+  }
+  console.log(toDos);
+  return (
+    <div>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input 
+          type="text"
+          placeholder="write your to do.."
+          onChange={onChange}
+          value={toDo}
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr/>
+      <ul>
+        {toDos.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+아래처럼 map()을 이용하여 react element로 이루어진 배열을 <ul>태그안에 return해주면 
+컴포넌트로 이루어진 배열이 리스트로서 출력되게 된다. 
+
+*************************************************************************************************************************************
+<ul>
+    {toDos.map((item) => (
+        <li>{item}</li>
+    ))}
+</ul>
+*************************************************************************************************************************************
+
+즉, 아래처럼 코드를 작성해주면 아래의 화면처럼 1,2,3을 리스트로서 화면에 출력해준다는 의미이다. 
+
+{이미지38 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if(toDo === "") {
+      return;
+    }
+    setToDos(currentArray => [toDo, ...currentArray]);
+    setToDo("");
+  }
+  console.log(toDos);
+  return (
+    <div>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input 
+          type="text"
+          placeholder="write your to do.."
+          onChange={onChange}
+          value={toDo}
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr/>
+      <ul>
+        {[<li>1</li>, <li>2</li>, <li>3</li>]}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+좋다. 
+잘 동작한다. 
+하지만 콘솔창을 보면 아래처럼 경고문구가 뜨는것을 볼 수 있다. 
+{이미지39 삽입}
+
+같은 컴포넌트의 리스트를 render할 때 key라는 prop을 넣어주라는 경고문구가 끈다. 
+이건 그냥 리액트가 기본적으로 리스트에 있는 모든 item들을 인식하기 때문이다. 
+
+그냥 만들어지는 <li>에 key라는 prop만 넣어주면 된다. 
+그리고 이 key값은 unique한 값이어야 한다. 
+그래서 map 함수에 대한 문서를 찾아보면 
+{이미지40 삽입}
+
+첫번째 인자는 value 여야하고(현재는 각각의 toDo를 의미한다.)
+두번째 인자는 index 라고 적혀있다. 이 index는 0,1,2,3,4 의 숫자로 되어 있는 값이다. 
+그렇다면 이 index를 key값에 넣어주면 된다. 
+아주 쉽다. 
+아래의 코드 참고 
+
+{이미지41 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if(toDo === "") {
+      return;
+    }
+    setToDos(currentArray => [toDo, ...currentArray]);
+    setToDo("");
+  }
+  console.log(toDos);
+  return (
+    <div>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input 
+          type="text"
+          placeholder="write your to do.."
+          onChange={onChange}
+          value={toDo}
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr/>
+      <ul>
+        {toDos.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+짠.. 이렇게 toDo list 를 만들었다. 
+이걸 Vanila Javascript 로 작성했다면, HTML이랑 JS 왔다갔다하면서 
+뭐 태그 엄청 가져오고 거기다가 뭐 addEventListener 달고 난리난리 했겠지만 
+리액트롤 사용하니 이리 쉽고 간단하게 만들수 있게 되었다. 
+리액트의 강점을 여기서 한번 느끼고 가자. 
+
+기억해야할것은 여기서 내가 한 건 결국 배열을 가져와서 
+그 배열의 item들을 변형해서 <li>가 되도록 한 것이다. 
+그게 다다. 
+
+원래의 toDos 배열은 단순 string 으로 구성된 배열이었다. 
+그리고 map() 함수를 통해서 return하는 값이 어떤 값이던지 그 값은 결국 새로운 배열이다. 
+그리고 그 배열은 <li key={index}>{item}</li>  이러한 형태의 item들로 구성되어있는 하나의 배열이다. 
+
+{toDos.map((item, index) => (
+    <li key={index}>{item}</li>
+))}
+
+이것을 통해 얻어진 배열을 콘솔창에 찍어보면 
+
+console.log({toDos.map((item, index) => (
+    <li key={index}>{item}</li>
+  ))});
+
+아래처럼 react element 인 배열인것을 확인할 수 있다. 
+{이미지42 삽입}
+
+
+
+# Coin Tracker
+
+작은 프로젝트를 만들어 볼건데, 이 프로젝트는 단순히 그냥 암호화폐들과 그 가격을 나열하게 될 것이다. 
+useEffect 를 사용하여 페이지에 처음 들어오면 로딩 메시지가 보이고 
+코인 가격들을 다 불러오면 로딩 메시지를 숨기고 코인 가격들을 리스트로 보여주도록 할 것이다. 
+
+2개의 state를 만들것인데 
+하나는 로딩을 위한 것이고, 
+또 다른 하나는 코인 리스트를 잠시 가지고 있기 위한 것이다. 
+
+{이미지43 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div>
+      <h1>The Coins!</h1>
+      {loading ? <strong>Loading...</strong> : null}
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+일단 상기와 같이 초기 화면을 구성한 뒤 
+API를 가져올 것이다. 
+API는 coinpaprika 라고 불리는것이고, 
+"https://api.coinpaprika.com/v1/tickers"
+에서 다량의 방대한 코인 정보들을 넘겨받을 수 있다. 
+
+자 그래서 나는 컴포넌트가 처음으로 render 되었을 때만 이 API를 즉시 실행시키고 싶다. 
+그러기 위해서 사용하는것이 useEffect 이고 당연하게도 처음만 실행시킬것이니 
+dependency 는 없이 빈 배열을 넣어줄 것이다. 
+
+하기의 코드처럼 useEffect를 통해 이 URL을 한번만 fetch 해주면 
+이 URL이 return해주는 정보를 가져올 수 있다. 
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers")
+  },[])
+
+  return (
+    <div>
+      <h1>The Coins!</h1>
+      {loading ? <strong>Loading...</strong> : null}
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+자 위처럼 코드를 작성하면 fetch("https://api.coinpaprika.com/v1/tickers") 를 통해 정보를 가져오는것을 
+브라우저의 네트워크를 통해 확인할 수 있다. 
+
+나는 ticker를 request 했고 그에대한 response 로 방대한 코인정보를 받아왔다. 
+
+{이미지44 삽입}
+
+이제 나는 이 response로 부터 이 json 데이터를 추출해야 한다. 
+그리고 이 추출한 데이터를 콘솔창에 띄워보면 2500개의 코인데이터를 받은것을 확인할 수 있다. 
+
+{이미지45 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers").then((response)=>response.json())
+    .then((json) => console.log(json))
+  },[])
+
+  return (
+    <div>
+      <h1>The Coins!</h1>
+      {loading ? <strong>Loading...</strong> : null}
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+자 이렇게 엄청나게 큰 배열을 받았다. 
+이게 우리의 코인 데이터다. 
+이것으로 이젠 뭘 하면 될까?
+
+이 데이터를 나의 컴포넌트에서 어떻게 보여줄 수 있을까? 
+당연히 나의 컴포넌트에 보여주기위해서는 이 데이터를 State 에 넣어주면 되겠다. 
+
+코인데이터를 넣기위한 coins 라는 State를 만든 뒤 기본값으로는 빈 배열을 주고 
+추출한 json 데이터를 이 State에 넣어주면 된다. 
+
+또한 코인데이터를 다 가져왔으니 이제 Loading State 또한 false 로 바꿔줌으로서 
+페이지에서 Loading 메시지를 지워주면 된다. 
+
+기존의 console.log(json); 대신 위의 동작들을 아래처럼 넣어주면 되겠다. 
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers").then((response)=>response.json())
+    .then((json) => {
+      setCoins(json);       <- 추출한 코인데이터 State에 넣어줌
+      setLoading(false);    <- 코인데이터 다 받았으니 Loading 메시지 내려줌
+    })
+  },[])
+
+  return (
+    <div>
+      <h1>The Coins!</h1>
+      {loading ? <strong>Loading...</strong> : null}
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+위처럼 코드를 작성해주면 페이지를 리로드할 때 아주 짧게 "Loading..." 이라는 텍스타가 
+페이지에 보이고 사라진다. 
+
+이거 내가 coins 를 아주 빠르게 가져온다는 뜻이다. 
+API가 아주 빠르게 response 해준다. 
+
+자 그럼 이제 나는 coins 라는 변수에 코인들의 배열이 담겨있다는 것을 알고 있다. 
+이제 이 배열을 .map() 함수를 사용하여 리스트화 시킬것이고 
+각 코인들의 이름, 심볼, 가격을 표시해줄것이다. 
+
+map을 사용하면 리액트는 element에 key를 주도록 했었다. 
+이전에는 map함수안에서 사용하는 함수의 두번째인자인 index를 사용하여 key값을 부여했지만 
+
+현재 내가 가져온 코인데이터는 배열안의 각각의 코인데이터들이 그들만의 ID 값을 가지고있기 때문에 
+이 ID 를 key로 사용하면 된다. 
+
+{이미지46 삽입}
+
+아래의 코드 참고 
+
+{이미지47 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers").then((response)=>response.json())
+    .then((json) => {
+      setCoins(json);
+      setLoading(false);
+    })
+  },[])
+
+  return (
+    <div>
+      <h1>The Coins!</h1>
+      {loading ? <strong>Loading...</strong> : null}
+      <ul>
+        {coins.map((coin)=>{
+          return <li key={coin.id}>{coin.id}({coin.symbol}) : ${coin.quotes.USD.price} USD</li>
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+짠 이렇게 우리는 많은 코인들의 정보를 가져올 수 있게 되었다. 
+이건 뭐 너무 많아서 몇개인지 셀 수도 없다. 
+
+아래처럼 coins.length 를 넣어주면 개수를 알 수 있게 되었다. 
+
+{이미지48 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers").then((response)=>response.json())
+    .then((json) => {
+      setCoins(json);
+      setLoading(false);
+    })
+  },[])
+
+  return (
+    <div>
+      <h1>The Coins!({coins.length})</h1>
+      {loading ? <strong>Loading...</strong> : null}
+      <ul>
+        {coins.map((coin)=>{
+          return <li key={coin.id}>{coin.id}({coin.symbol}) : ${coin.quotes.USD.price} USD</li>
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+위처럼 작성해주면 처음에는 코인의 개수가 0으로 떳다가 코인데이터를 전부 로딩한 후에 2500개의 개수가 뜨는것을 볼 수 있다. 
+이것은 우린 처음에 기본값으로 비어있는 배열을 coins 에 넣겨주기 때문이다. 
+
+만약 
+const [coins, setCoins] = useState();
+
+로 coins의 기본값을 비어있는 값으로 주었다면 에러가 발생한다. 
+왜냐하면 컴포넌트의 시작인 coins가 undefined 이고, undefined 는 length 를 가지고 있지 않기 때문이다. 
+
+이게 바로 기본값을 지정해줘야하는 이유이다. 
+
+
+
+
+# (숙제)
+-> 내가 가진 USD를 입력하고 얼마만큼의 BTC를 살 수 있는지 계산해주는것을 구현해보자. 
+-> select 에서 선택한 option의 value로 객체를 넘겨주려면 어떻게 해야할까?
+
+
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  const [USD, setUSD] = useState(0);
+  const [selectCoin, setSelectCoin] = useState("");
+  const [selectCoinsPrice, setSelectCoinsPrice] = useState(0);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers").then((response)=>response.json())
+    .then((json) => {
+      setCoins(json);
+      setLoading(false);
+      setSelectCoin(json[0].symbol);
+      setSelectCoinsPrice(json[0].quotes.USD.price);
+    })
+  },[])
+
+  const onChangeInput = (event) => {
+    setUSD(event.target.value);
+  }
+
+  const onChangeSelect = ({target}) => {
+    //setSelectCoin(target.value.symbol);
+    //setSelectCoinsPrice(target.value.quotes.USD.price);
+    const value = target.value;
+    console.log(value);
+  }
+
+  return (
+    <div>
+      <h1>The Coins!({coins.length})</h1>
+      {loading ? <strong>Loading...</strong> : null}
+      <select onChange={onChangeSelect}>
+        {coins.map((coin)=>{
+          return <option key={coin.id} value={coin}>{coin.id}({coin.symbol}) : ${coin.quotes.USD.price} USD</option>
+        })}
+      </select>
+      <hr></hr>
+      <input 
+        type="number"
+        placeholder="My USD amount"
+        value={USD}
+        onChange={onChangeInput}
+      />
+      <h1>{selectCoin} + {selectCoinsPrice}</h1>
+    </div>
+  );
+}
+
+export default App;
+*************************************************************************************************************************************
+
+위와 같이 작성하였고 select 에서 선택한 옵션의 value 로 선택한 coin의 객체를 넘겨주었더니 아래 이미지에서 보다시피 
+[object Object] 가 나왔다. 
+
+{이미지49 삽입}
+
+이게 뭘까 2시간을 헤메다가 찾아보니
+
+[object Object]
+객체가 아닌 [object Object]라는 문자열로 표시될 뿐이다.
+문자열이기때문에 해당 데이터를 사용하여 data.name, data.price등을 다룰 수 없다.
+
+Object.prototype.toString의 인자로 객체가 들어왔을 때 나타나는 결과물이다.
+즉, 어떤 클래스타입인지 알려주는 Object.prototype.toString의 출력값이라는 것.
+출처: https://japing.tistory.com/entry/React-Select-Option의-Value-속성에-Object를-어떻게-다룰-수-있을까 [재카이브:티스토리]
+
+
+결국 내가 원하는 객체로서 데이터가 전달된것이 아니라 그냥 객체모양의 문자열이 전달되었다는 뜻 
+즉, opton의 value는 문자타입의 데이터만 전달이 가능하다는 뜻이다.
+
+그렇다면 option의 value속성에 직렬화(JSON.stringify)된 Object를 보내준 후,
+핸들러함수에서 파싱(JSON.parse)를 해주어 다룬다면 
+요구사항을 충족하게된다
+
+{이미지50 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
+  const [USD, setUSD] = useState(0);
+  const [selectCoin, setSelectCoin] = useState("");
+  const [selectCoinsPrice, setSelectCoinsPrice] = useState(0);
+  useEffect(() => {
+    fetch("https://api.coinpaprika.com/v1/tickers").then((response)=>response.json())
+    .then((json) => {
+      setCoins(json);
+      setLoading(false);
+      setSelectCoin(json[0].symbol);
+      setSelectCoinsPrice(json[0].quotes.USD.price);
+    })
+  },[])
+
+  const onChangeInput = (event) => {
+    setUSD(event.target.value);
+  }
+
+  const onChangeSelect = ({target}) => {
+    const value = JSON.parse(target.value);
+    setSelectCoin(value.symbol);
+    setSelectCoinsPrice(value.quotes.USD.price);
+    
+    console.log(value);
+  }
+
+  return (
+    <div>
+      <h1>The Coins!({coins.length})</h1>
+      {loading ? <strong>Loading...</strong> : null}
+      <select onChange={onChangeSelect}>
+        {coins.map((coin)=>{
+          return <option key={coin.id} value={JSON.stringify(coin)}>{coin.id}({coin.symbol}) : ${coin.quotes.USD.price} USD</option>
+        })}
+      </select>
+      <hr></hr>
+      <input 
+        type="number"
+        placeholder="My USD amount"
+        value={USD}
+        onChange={onChangeInput}
+      />
+      <h1>You can Buy {(USD*selectCoinsPrice).toFixed(2)} {selectCoin}</h1>
     </div>
   );
 }
