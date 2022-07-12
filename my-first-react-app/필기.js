@@ -4982,10 +4982,354 @@ function App() {
         value={USD}
         onChange={onChangeInput}
       />
-      <h1>You can Buy {(USD*selectCoinsPrice).toFixed(2)} {selectCoin}</h1>
+      <h1>You can Buy {(USD/selectCoinsPrice).toFixed(2)} {selectCoin}</h1>
     </div>
   );
 }
 
 export default App;
 *************************************************************************************************************************************
+
+
+
+
+
+# Movie App part One 
+
+{이미지51 삽입}
+*************************************************************************************************************************************
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  
+  const getMovies = async () => {
+    const response = await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year");
+    const json = await response.json();
+
+    setMovies(json.data.movies);
+    setLoading(false);
+  }
+
+  useEffect(()=>{getMovies()},[]);
+  console.log(movies);
+
+  return(
+    <div>
+      {loading ? <h1>Loading...</h1> : movies.map((movie)=>(
+        <div key={movie.id}>
+            <h2>{movie.title}</h2>
+            <p>{movie.summary}</p>
+            <ul>
+              {movie.genres.map((g)=>(
+                <li key={g}>{g}</li>
+              ))}
+            </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default App;
+*************************************************************************************************************************************
+
+이전에 코인데이터를 가져왔던것과 하나도 다를것 없이 영화목록을 가져와서 그저 화면에 출력하였다. 
+뭐 영화목록, 설명, 장르, 커버이미지...등등 이것저것 다 가져왔다. 
+
+(아 물론 fetch.then() 에서 async, await 로 방법을 바꾸긴했다. 하지만 같은거나 다름없음.
+여기서 중요한건 .json() 도 await 로 기다려줘야 한다는 사실임. 중요허다. 이것도 await 안하면 그냥 리턴값 안받고 바로 다음줄로 넘어가버림)
+
+위의 코드에서 해준건 결국 state로부터 받은 data를 보여준 것뿐이다. 
+그리고 state는 그 data를 API로부터 받아온다. 
+여기서 한건 그게 전부다. 
+
+계속 같은것을 반복하고 있다. 
+
+loading 되었을 때 setLoading 을 false로 바꿔주고 
+->
+fetch를 통해 movies를 받아오면 API로 부터 얻은 data로 State를 변경한다. 
+-> 
+그래서 컴포넌트에서 movies.map()을 해주고 
+-> 
+그렇게 각각의 movie에 접근해서 원하는 값을 가져와 컴포넌트를 구성해줄 수 있다. 
+
+
+
+
+# Movie App part Two 
+
+{이미지52 삽입}
+위의 페이지 구성에서 영화제목 누르면 영화를 상세히 설명해주는 페이지로 이동시키는 기능을 추가해줄 것이다. 
+
+그전에 현재 코드가 너무 난잡하니 리액트의 장점을 활용하여 컴포넌트를 나누어 정리해줄 것이다. 
+*************************************************************************************************************************************
+(기존)
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  
+  const getMovies = async () => {
+    const response = await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year");
+    const json = await response.json();
+
+    setMovies(json.data.movies);
+    setLoading(false);
+  }
+
+  useEffect(()=>{getMovies()},[]);
+  console.log(movies);
+
+  return(
+    <div>
+      {loading ? <h1>Loading...</h1> : movies.map((movie)=>(
+        <div key={movie.id}>
+            <h2>{movie.title}</h2>
+            <p>{movie.summary}</p>
+            <ul>
+              {movie.genres.map((g)=>(
+                <li key={g}>{g}</li>
+              ))}
+            </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default App;
+*************************************************************************************************************************************
+
+*************************************************************************************************************************************
+(수정)
+
+(App.js)
+import styles from "./App.module.css";
+import { useEffect, useState } from "react";
+import Movie from "./Movie";
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  
+  const getMovies = async () => {
+    const response = await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year");
+    const json = await response.json();
+
+    setMovies(json.data.movies);
+    setLoading(false);
+  }
+
+  useEffect(()=>{getMovies()},[]);
+  console.log(movies);
+
+  return(
+    <div>
+      {loading ? <h1>Loading...</h1> : movies.map((movie)=>(
+        <Movie 
+          key={movie.id}
+          coverImg={movie.medium_cover_image}
+          title={movie.title}
+          summary={movie.summary}
+          genres={movie.genres}
+        />
+      ))}
+    </div>
+  )
+}
+
+export default App;
+
+
+(Movie.js)
+import PropTypes from "prop-types"
+import { Router } from 'express'
+
+function Movie({ coverImg, title, summary, genres }) {
+    return (
+        <div>
+            <img src={coverImg} alt={title}/>
+            <h2>{title}</h2>
+            <p>{summary}</p>
+            <ul>
+              {genres.map((g)=>(
+                <li key={g}>{g}</li>
+              ))}
+            </ul>
+        </div>
+    );
+}
+
+Movie.propTypes ={
+    coverImg: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default Movie;
+*************************************************************************************************************************************
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+정의 및 특징
+img 태그의 alt 속성은 이미지를 보여줄 수 없을 때 해당 이미지를 대체할 텍스트를 명시합니다.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Movie 컴포넌트에 propType을 설정해준것을 추가하였다. 
+
+잊지 말아야 할것은 컴포넌를 분리하여 <Movie/> 를 사용하더라고 key 값을 할당해야만 한다는 것이다. 
+key는 React.js 에서만, map 안에서 컴포넌트들을 render할 때 사용하는 것이다. 
+
+자 이제 React Router에 대해 공부해볼 것이다. 
+React Router는 페이지를 전환하는 것이다. 
+
+현재 나는 localhost:3000/ 즉, home에 있다. 
+예를들면 난 localhost:3000/movies/movie.id 가 붙은 페이지로 가고 싶다. 
+이것을 React Router를 통하여 구현해볼 것이다. 
+
+일단 
+$ npm i react-router-dom 
+
+으로 설치. 
+
+자 이제 코드를 바꾸거나 이동시켜야 한다. 
+왜냐하면 이제 나는 스크린 단위로 생각해야 하기 때문이다. 
+route 별로 생각해봐야 한다. 
+
+예를들어 하나의 route는 home, 홈스크린, 홈페이지 등등 뭐암튼 맘대로 부르시고 
+home route를 두고 이속에서 모든 영화를 보여줄거고 
+Movie route를 두고 그 곳에서는 영화 하나만 보여줄 예정이다. 
+
+그러기 위해서 src 폴더안에 routes 라는 폴더를 하나 새로 만들어주고 
+또 components 라는 폴더를 만들어 줄것이다. 
+{이미지53 삽입}
+
+그리고 components 폴더안에 Movie를 집어 넣어야 한다. 
+(App.js 에서 Movie.js 위치를 수정해줘야한다.)
+
+그리고 routes 폴더안에 Home.js(Home route)를 만들어 줄거다. 
+여기에는 home이라는 함수가 있을거고 이 Home route는 기본적으로 나의 App 컴포넌트 전체를 가지고 있게 될것이다. 
+왜냐면 이제 Home 이라는 컴포넌트를 새로 만들고 그안에 기존의 App 컴포넌트 코드를 가져갈것이기 때문이다. 
+
+*************************************************************************************************************************************
+(App.js)
+import Home from "./routes/Home";
+
+function App() {
+  return null;
+}
+
+export default App;
+
+(Home.js)
+import { useEffect, useState } from "react";
+import Movie from "../components/Movie";
+
+
+function Home() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  
+  const getMovies = async () => {
+    const response = await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year");
+    const json = await response.json();
+
+    setMovies(json.data.movies);
+    setLoading(false);
+  }
+
+  useEffect(()=>{getMovies()},[]);
+
+  return(
+    <div>
+      {loading ? <h1>Loading...</h1> : movies.map((movie)=>(
+        <Movie 
+          key={movie.id}
+          coverImg={movie.medium_cover_image}
+          title={movie.title}
+          summary={movie.summary}
+          genres={movie.genres}
+        />
+      ))}
+    </div>
+  )
+}
+
+export default Home;
+
+(Movie.js)
+import PropTypes from "prop-types"
+
+function Movie({ coverImg, title, summary, genres }) {
+    return (
+        <div>
+            <img src={coverImg} alt={title}/>
+            <h2>{title}</h2>
+            <p>{summary}</p>
+            <ul>
+              {genres.map((g)=>(
+                <li key={g}>{g}</li>
+              ))}
+            </ul>
+        </div>
+    );
+}
+
+Movie.propTypes ={
+    coverImg: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+export default Movie;
+*************************************************************************************************************************************
+
+자 뭐 그저 App.js 에서 코드를 잘라내어, routes 폴더의 Home.js로 그 코드를 옮겨온 것 뿐이다. 
+코드는 그대로 똑같다. 
+바뀐것은 그저 컴포넌트의 이름과 위치 뿐이다. 
+
+이제 나는 새로운 route를 만들고 싶은데 
+(라우트라고 부르든 스크린이라고 부르든 페이지라고 부르든 뭐 맘대로 하면 된다.)
+이건 Detail.js 를 가지고 있게 될거다. 
+(routes폴더 안에 있음.)
+그리고 Deils.js는 아래코드처럼 h1태그안에 Detail이란 텍스트를 리턴해준다. 
+
+*************************************************************************************************************************************
+(Detail.js)
+function Detail() {
+    return <h1>Detail</h1>
+}
+
+export default Detail;
+*************************************************************************************************************************************
+
+자 정리하자면 
+Detail.js는 그냥 h1을 return하는 컴포넌트를 만드는 과정이었고 
+Home에서 우리가 뭘 하고 있는지 알 수 있는데 
+기본적으로 로딩하거나 영화 리스트 전체를 보여주는 스크린 전체를 만들었다. 
+그게 다다. 
+
+조금 다른 점은 App.js 에 있는데 
+*************************************************************************************************************************************
+(App.js)
+import Home from "./routes/Home";
+
+function App() {
+  return null;
+}
+*************************************************************************************************************************************
+
+App.js 는 더이상 영화들을 보여주지 않고 
+대신에 App.js는 router를 render 한다. 
+router는 URL 을 보고있는 컴포넌트고 
+만약 내가 localhost:3000/ 에 있다면 router는 나에게 Home 컴포넌트를 보여주게 될 것이다. 
+만약 내가 localhost:3000/movies/123 뭐 이런 URL에 있다면 router는 나에게 Detail 컴포넌트를 보여주게 될거다. 
+
+그래서 App.js는 이제 새로운 컴포넌트를 render 하게 될텐데 이부분에 대해서 이제부터 공부해볼것이다. 
+그리고 이 새로운 컴포넌트는 URL을 보고 있는거고 URL에 따라서 Home을 보여주거나 Detail을 보여주거나 할거다. 
